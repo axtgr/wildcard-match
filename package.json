@@ -1,7 +1,7 @@
 {
   "name": "wildcard-match",
   "version": "0.0.0",
-  "description": "",
+  "description": "Match two glob-like patterns",
   "author": "Alex Shnayder <alex@shnayder.pro>",
   "license": "MIT",
   "main": "src/index.js",
@@ -9,7 +9,12 @@
     "lint": "./node_modules/.bin/eslint src test",
     "test": "./node_modules/.bin/mocha"
   },
-  "keywords": [],
+  "keywords": [
+    "match",
+    "wildcard",
+    "glob",
+    "pattern"
+  ],
   "homepage": "https://github.com/alex-shnayder/wildcard-match",
   "repository": {
     "type": "git",
