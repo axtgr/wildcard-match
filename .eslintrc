@@ -1,0 +1,33 @@
+{
+  "env": {
+    "node": true,
+    "browser": true
+  },
+  "plugins": [
+    "no-empty-blocks"
+  ],
+  "rules": {
+    "no-empty": 0,
+    "strict": [2, "global"],
+    "indent": [2, 2, { "SwitchCase": 1 }],
+    "quotes": [2, "single"],
+    "linebreak-style": [2, "unix"],
+    "semi": [2, "always"],
+    "no-extra-semi": 2,
+    "no-unreachable": 2,
+    "yoda": 0,
+    "comma-dangle": 0,
+    "no-mixed-requires": 0,
+    "no-use-before-define": [2, "nofunc"],
+    "key-spacing": 0,
+    "no-unused-vars": [2, {
+      "vars": "all",
+      "args": "none"
+    }],
+    "no-unused-expressions": 0,
+    "consistent-return": 0,
+    "no-shadow": 0,
+    "no-underscore-dangle": 0,
+    "no-constant-condition": 0
+  }
+}

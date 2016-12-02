@@ -1,0 +1,27 @@
+{
+  "name": "wildcard-match",
+  "version": "0.0.0",
+  "description": "",
+  "author": "Alex Shnayder <alex@shnayder.pro>",
+  "license": "MIT",
+  "main": "src/index.js",
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint src test",
+    "test": "./node_modules/.bin/mocha"
+  },
+  "keywords": [],
+  "homepage": "https://github.com/alex-shnayder/wildcard-match",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alex-shnayder/wildcard-match.git"
+  },
+  "bugs": {
+    "url": "https://github.com/alex-shnayder/wildcard-match/issues"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "eslint": "^3.11.0",
+    "eslint-plugin-no-empty-blocks": "0.0.2",
+    "mocha": "^3.2.0"
+  }
+}
