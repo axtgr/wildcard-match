@@ -1,6 +1,6 @@
 {
   "name": "wildcard-match",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Match two glob-like patterns",
   "author": "Alex Shnayder <alex@shnayder.pro>",
   "license": "MIT",
