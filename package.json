@@ -5,6 +5,7 @@
   "author": "Alex Shnayder <alex@shnayder.pro>",
   "license": "MIT",
   "main": "src/index.js",
+  "types": "src/index.d.ts",
   "scripts": {
     "lint": "./node_modules/.bin/eslint src test",
     "test": "./node_modules/.bin/mocha"
