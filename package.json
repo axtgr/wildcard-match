@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "description": "Match two glob-like patterns",
   "author": "Alex Shnayder <alex@shnayder.pro>",
-  "license": "MIT",
+  "license": "ISC",
   "main": "src/index.js",
   "types": "src/index.d.ts",
   "scripts": {
-    "lint": "./node_modules/.bin/eslint src test",
-    "test": "./node_modules/.bin/mocha"
+    "lint": "eslint src test",
+    "test": "mocha test/**/*"
   },
   "keywords": [
     "match",
@@ -25,9 +25,8 @@
     "url": "https://github.com/alex-shnayder/wildcard-match/issues"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "eslint": "^3.11.0",
-    "eslint-plugin-no-empty-blocks": "0.0.2",
-    "mocha": "^3.2.0"
+    "chai": "^4.1.2",
+    "eslint": "^4.6.1",
+    "mocha": "^3.5.3"
   }
 }

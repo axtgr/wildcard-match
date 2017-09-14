@@ -1,4 +1,5 @@
 build
+pg
 node_modules
 components
 .DS_Store
@@ -7,6 +8,16 @@ components
 Thumbs.db
 *.tmp
 .idea
+.vs
+.vscode
 ._*
 *.log
 .npmrc
+.env
+*.suo
+*.user
+*.ncb
+ipch/
+*.sdf
+*.opensdf
+package-lock.json

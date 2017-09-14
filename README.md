@@ -11,11 +11,11 @@ A function that matches two glob-like patterns with each other. It has an advant
 ## Usage
 
 ```javascript
-let match = require('wildcard-match');
+const match = require('wildcard-match')
 
-console.log(match('one/**', 'one/two/three')); // true
-console.log(match('.', ['one', '**', 'four'], 'one.two.three.four')); // true
-console.log(match('one.two', 'one.two.*')); // false because * matches exactly one segment
+match('one/**', 'one/two/three') // true
+match('.', ['one', '**', 'four'], 'one.two.three.four') // true
+match('one.two', 'one.two.*') // false because * matches exactly one segment
 ```
 
 Patterns can be either strings or arrays, and can have the following wildcards:
@@ -28,4 +28,4 @@ If at least one of the samples is a string, a delimiter can be provided as the f
 
 ## License
 
-[MIT](LICENSE)
+[ISC](LICENSE)

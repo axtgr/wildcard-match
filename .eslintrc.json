@@ -3,9 +3,6 @@
     "node": true,
     "browser": true
   },
-  "plugins": [
-    "no-empty-blocks"
-  ],
   "rules": {
     "no-empty": 0,
     "strict": [2, "global"],
