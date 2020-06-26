@@ -1,32 +1,51 @@
 {
   "name": "wildcard-match",
   "version": "1.1.0",
-  "description": "Match two glob-like patterns",
-  "author": "Alex Shnayder <alex@shnayder.pro>",
+  "description": "Check if a string matches a pattern containing * and ** wildcards",
+  "author": "Alex Schneider <me@schneider.ax>",
+  "repository": "https://github.com/axtgr/wildcard-match",
   "license": "ISC",
-  "main": "src/index.js",
-  "types": "src/index.d.ts",
-  "scripts": {
-    "lint": "eslint src test",
-    "test": "mocha test/**/*"
-  },
   "keywords": [
     "match",
     "wildcard",
     "glob",
     "pattern"
   ],
-  "homepage": "https://github.com/alex-shnayder/wildcard-match",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/alex-shnayder/wildcard-match.git"
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint src test",
+    "test": "ts-mocha test/**"
   },
-  "bugs": {
-    "url": "https://github.com/alex-shnayder/wildcard-match/issues"
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged && npm run test -- -b"
+    }
+  },
+  "lint-staged": {
+    "(src|test)/**/*.ts": [
+      "eslint --cache --fix"
+    ],
+    "*.md": "prettier --write"
   },
   "devDependencies": {
-    "chai": "^4.1.2",
-    "eslint": "^4.6.1",
-    "mocha": "^3.5.3"
+    "@types/mocha": "^7.0.2",
+    "@types/node": "^14.0.14",
+    "@typescript-eslint/eslint-plugin": "^3.4.0",
+    "@typescript-eslint/parser": "^3.4.0",
+    "eslint": "^7.3.1",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-config-problems": "^4.0.0",
+    "eslint-plugin-prefer-let": "^1.0.1",
+    "eslint-plugin-prettier": "^3.1.4",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.11",
+    "mocha": "^8.0.1",
+    "prettier": "^2.0.5",
+    "ts-mocha": "^7.0.0",
+    "typescript": "^3.9.5"
   }
 }

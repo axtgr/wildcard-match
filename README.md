@@ -1,30 +1,66 @@
 # wildcard-match
 
-A function that matches two glob-like patterns with each other. It has an advantage over other similar libraries in that it allows *both* samples to have wildcards.
+Check if a string matches a pattern containing `*` and `**` wildcards.
 
+## Install
 
-## Installation
-
-`npm install --save wildcard-match`
-
+`npm install wildcard-match`
 
 ## Usage
 
-```javascript
-const match = require('wildcard-match')
+The default export is a function that takes a pattern and an optional separator (`/` by default).
+It compiles the pattern and returns a function for matching strings with it.
 
-match('one/**', 'one/two/three') // true
-match('.', ['one', '**', 'four'], 'one.two.three.four') // true
-match('one.two', 'one.two.*') // false because * matches exactly one segment
+```js
+const wcm = require('wildcard-match')
+const match = wcm('src/*/**/index.js') // Precompile the pattern-matching function
+match('src/lib/component/test/index.js') // Check if the string matches the pattern
 ```
 
-Patterns can be either strings or arrays, and can have the following wildcards:
+Wildcards will only match whole segments (`/*/`) and not arbitrary substrings (`/foo*/`):
 
-* `*` for exactly one segment
-* `**` for any number of segments (including zero)
+- `*` for exactly one segment
+- `**` for _any_ number of segments (including zero)
 
-If at least one of the samples is a string, a delimiter can be provided as the first argument. If the delimiter is not specified, `/` is used.
+## Examples
 
+```javascript
+const wcm = require('wildcard-match')
+
+const match = wcm('src/**/index.js')
+
+match('src/index.js') // true
+match('src/lib/index.js') // true
+match('src/lib/component/test/index.js') // true
+match('src') // false
+match('index.js') // false
+match('src/index.js/lib') // false
+```
+
+```javascript
+const wcm = require('wildcard-match')
+
+const match = wcm('**.*.example.com', '.')
+
+match('example.com') // false
+match('foo.example.com') // true
+match('foo.bar.example.com') // true
+match('foo.bar.baz.qux.example.com') // true
+match('foo.example.com.bar') // false
+```
+
+```javascript
+const wcm = require('wildcard-match')
+
+const match = wcm('**') // will match ANY string
+
+match('') // true
+match(' ') // true
+match('/') // true
+match('foo') // true
+match('foo/bar') // true
+match('foo/bar/baz/qux') // true
+```
 
 ## License
 

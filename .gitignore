@@ -1,7 +1,6 @@
 build
 pg
 node_modules
-components
 .DS_Store
 *.sublime-project
 *.sublime-workspace
@@ -21,3 +20,4 @@ ipch/
 *.sdf
 *.opensdf
 package-lock.json
+.eslintcache
