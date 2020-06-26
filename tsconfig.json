@@ -3,9 +3,8 @@
     "outDir": "dist",
     "target": "ES2015",
     "declaration": true,
-    "module": "commonjs",
+    "module": "CommonJS",
     "moduleResolution": "node",
-    "resolveJsonModule": true,
     "sourceMap": true,
     "esModuleInterop": true,
     "strict": true

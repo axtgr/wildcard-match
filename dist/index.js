@@ -50,6 +50,10 @@ function wildcardMatch(pattern, separator = DEFAULT_SEPARATOR) {
     match.pattern = pattern;
     return match;
 }
-wildcardMatch.default = wildcardMatch;
+// Support both CommonJS and ES6-like modules.
+// Could be `wildcardMatch.default = wildcardMatch`, but TypeScript has a bug:
+// https://github.com/microsoft/TypeScript/issues/32470
+// eslint-disable-next-line dot-notation
+wildcardMatch['default'] = wildcardMatch;
 module.exports = wildcardMatch;
 //# sourceMappingURL=index.js.map
