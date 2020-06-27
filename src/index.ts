@@ -33,26 +33,25 @@ function wildcardMatch(pattern: string, separator = DEFAULT_SEPARATOR): MatchFn 
   let regexpPattern: string
 
   if (pattern === '*') {
-    regexpPattern = `((?!${escSeparator}).)+`
+    regexpPattern = `((?!${escSeparator}).)*`
   } else {
     let segments = escPattern.split(escSeparator)
     regexpPattern = segments.reduce((result, segment, i) => {
       if (segment === '\\*\\*') {
         if (i === 0) {
-          return `(.+${escSeparator})?`
+          return `(.*${escSeparator})?`
         } else if (i === segments.length - 1) {
-          return `${trimRight(result, escSeparator)}(${escSeparator}.+)?`
+          return `${trimRight(result, escSeparator)}(${escSeparator}.*)?`
         }
-        return `${trimRight(result, escSeparator)}(${escSeparator}.+)?${escSeparator}`
+        return `${trimRight(result, escSeparator)}(${escSeparator}.*)?${escSeparator}`
       }
 
-      if (segment === '\\*') {
-        segment = `((?!${escSeparator}).)+`
-      }
+      segment = segment.replace('\\*', `(((?!${escSeparator}).)*|)`)
 
       if (i < segments.length - 1) {
         return `${result}${segment}${escSeparator}`
       }
+
       return `${result}${segment}`
     }, '')
   }
