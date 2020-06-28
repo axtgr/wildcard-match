@@ -5,7 +5,7 @@ interface MatchFn {
 
 const DEFAULT_SEPARATOR = '/'
 
-let specialCharsRegExp = new RegExp('[-\\^$*+?.()|[\\]{}]', 'g')
+let specialCharsRegExp = new RegExp('[-\\^$+.()|[\\]{}]', 'g')
 
 function escapeRegExpString(str: string) {
   return str.replace(specialCharsRegExp, '\\$&')
@@ -37,7 +37,7 @@ function wildcardMatch(pattern: string, separator = DEFAULT_SEPARATOR): MatchFn 
   } else {
     let segments = escPattern.split(escSeparator)
     regexpPattern = segments.reduce((result, segment, i) => {
-      if (segment === '\\*\\*') {
+      if (segment === '**') {
         if (i === 0) {
           return `(.*${escSeparator})?`
         } else if (i === segments.length - 1) {
@@ -46,9 +46,10 @@ function wildcardMatch(pattern: string, separator = DEFAULT_SEPARATOR): MatchFn 
         return `${trimRight(result, escSeparator)}(${escSeparator}.*)?${escSeparator}`
       }
 
+      // The order of these replacements is important because the latter contains a ?
       segment = segment
-        .replace(/\\\*/g, `(((?!${escSeparator}).)*|)`)
-        .replace(/\\\?/g, `(?!${escSeparator}).`)
+        .replace(/(?<!\\)\?/g, `(?!${escSeparator}).`)
+        .replace(/(?<!\\)\*/g, `(((?!${escSeparator}).)*|)`)
 
       if (i < segments.length - 1) {
         return `${result}${segment}${escSeparator}`

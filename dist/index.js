@@ -1,6 +1,6 @@
 "use strict";
 const DEFAULT_SEPARATOR = '/';
-let specialCharsRegExp = new RegExp('[-\\^$*+?.()|[\\]{}]', 'g');
+let specialCharsRegExp = new RegExp('[-\\^$+.()|[\\]{}]', 'g');
 function escapeRegExpString(str) {
     return str.replace(specialCharsRegExp, '\\$&');
 }
@@ -27,7 +27,7 @@ function wildcardMatch(pattern, separator = DEFAULT_SEPARATOR) {
     else {
         let segments = escPattern.split(escSeparator);
         regexpPattern = segments.reduce((result, segment, i) => {
-            if (segment === '\\*\\*') {
+            if (segment === '**') {
                 if (i === 0) {
                     return `(.*${escSeparator})?`;
                 }
@@ -36,9 +36,10 @@ function wildcardMatch(pattern, separator = DEFAULT_SEPARATOR) {
                 }
                 return `${trimRight(result, escSeparator)}(${escSeparator}.*)?${escSeparator}`;
             }
+            // The order of these replacements is important because the latter contains a ?
             segment = segment
-                .replace(/\\\*/g, `(((?!${escSeparator}).)*|)`)
-                .replace(/\\\?/g, `(?!${escSeparator}).`);
+                .replace(/(?<!\\)\?/g, `(?!${escSeparator}).`)
+                .replace(/(?<!\\)\*/g, `(((?!${escSeparator}).)*|)`);
             if (i < segments.length - 1) {
                 return `${result}${segment}${escSeparator}`;
             }
