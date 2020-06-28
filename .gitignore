@@ -21,3 +21,4 @@ ipch/
 *.opensdf
 package-lock.json
 .eslintcache
+.nyc_output

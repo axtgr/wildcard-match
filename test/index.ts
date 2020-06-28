@@ -1,373 +1,323 @@
-import wcm from '../src'
-import assert from 'assert'
+import { ok, notOk } from 'tap'
+import match from '../src'
 
-describe('wildcardMatch', function () {
-  describe('pattern is a plain string, sample is a plain string', () => {
-    describe('match', () => {
-      let values: [string, string][] = [
-        ['one', 'one'],
-        ['two', 'two'],
-        ['one/two', 'one/two'],
-        ['one/two/three', 'one/two/three'],
-        ['one.two', 'one.two'],
-        ['one[].*+{}]  ][[..$', 'one[].*+{}]  ][[..$'],
-        ['', ''],
-        ['one//', 'one//'],
-        ['/', '/'],
-        [' ', ' '],
-        ['/one/', '/one/'],
-      ]
+// Match
+ok(match('one')('one'))
+ok(match('two')('two'))
+ok(match('one/two')('one/two'))
+ok(match('one/two/three')('one/two/three'))
+ok(match('one.two')('one.two'))
+ok(match('one[].*+{}]  ][[..$')('one[].*+{}]  ][[..$'))
+ok(match('')(''))
+ok(match('one//')('one//'))
+ok(match('/')('/'))
+ok(match(' ')(' '))
+ok(match('/one/')('/one/'))
+ok(match('*')(''))
+ok(match('*')('one'))
+ok(match('*/*')('one/two'))
+ok(match('*/*')('one/'))
+ok(match('*/*')('one/ '))
+ok(match('*/*/*')('one/two/three'))
+ok(match('*/*/*')('//'))
+ok(match('**')(''))
+ok(match('**')(' '))
+ok(match('**')(' /'))
+ok(match('**')('/'))
+ok(match('**')('///'))
+ok(match('**')('two'))
+ok(match('**')('two/three'))
+ok(match('**')('   /three'))
+ok(match('**')('   /three///'))
+ok(match('**')('/three'))
+ok(match('**')('//three'))
+ok(match('*/**')(''))
+ok(match('*/**')(' '))
+ok(match('*/**')(' /'))
+ok(match('*/**')('/'))
+ok(match('*/**')('///'))
+ok(match('*/**')('two'))
+ok(match('*/**')('two/three'))
+ok(match('*/**')('   /three'))
+ok(match('*/**')('   /three///'))
+ok(match('*/**')('/three'))
+ok(match('*/**')('//three'))
+ok(match('**/*')('one'))
+ok(match('**/*')('one/two'))
+ok(match('**/*')('one/two/three'))
+ok(match('**/*')('one/*/three'))
+ok(match('**/*')('one/*/**'))
+ok(match('*/**/*')('one/two'))
+ok(match('*/**/*')('one/two/three'))
+ok(match('*/**/*')('one/two/three/four/five'))
+ok(match('*/**/*')('one/two/*/four/five'))
+ok(match('*/**/*')('one/two/*/four/**'))
+ok(match('*/**/*')('one/ /three'))
+ok(match('*/**/*/**')('one/two'))
+ok(match('*/**/*/**')('one/two/three'))
+ok(match('one/*')('one/two'))
+ok(match('one/*')('one/*'))
+ok(match('one/*')('one/**'))
+ok(match('one/*')('one/***'))
+ok(match('one/*')('one/'))
+ok(match('one/*')('one/ '))
+ok(match('one/**')('one'))
+ok(match('one/**')('one/two'))
+ok(match('one/**')('one/two/three'))
+ok(match('one/**')('one/'))
+ok(match('one/**')('one/ / '))
+ok(match('one/**')('one/*/ **'))
+ok(match('one/**')('one/***'))
+ok(match('one/*/**')('one/two'))
+ok(match('one/*/**')('one/two/three'))
+ok(match('one/*/**')('one/two/three/four'))
+ok(match('one/*/**')('one/ / '))
+ok(match('one/*/**')('one/*/ **'))
+ok(match('one/*/**')('one/***'))
+ok(match('one/*/three')('one/two/three'))
+ok(match('one/*/three/')('one/two/three/'))
+ok(match('one/*/three/*')('one/two/three/'))
+ok(match('one/*/three/*')('one/two/three/four'))
+ok(match('one/**/two')('one/two'))
+ok(match('one/**/two/*')('one/two/three'))
+ok(match('one/**/three')('one/two/three'))
+ok(match('one/**/four')('one/two/three/four'))
+ok(match('one/**/two/*')('one/two/three'))
+ok(match('one/**/three/*')('one/two/three/four'))
+ok(match('one*')('one'))
+ok(match('*two')('two'))
+ok(match('one*')('onetwo'))
+ok(match('*two')('onetwo'))
+ok(match('one*three')('onetwothree'))
+ok(match('one*three')('onethree'))
+ok(match('one/*three')('one/twothree'))
+ok(match('one/two*')('one/twothree'))
+ok(match('*/')('/'))
+ok(match('**/')('/one/'))
+ok(match('*/one')('/one'))
+ok(match('**/one')('/one'))
+ok(match('?')('a'))
+ok(match('?')(' '))
+ok(match('??')('ab'))
+ok(match('??')(' b'))
+ok(match('???')('one'))
+ok(match('o?e')('one'))
+ok(match('?ne')('one'))
+ok(match('?ne')('ane'))
+ok(match('on?')('one'))
+ok(match('on?')('ont'))
+ok(match('o??')('one'))
+ok(match('o??')('ota'))
+ok(match('?n?')('one'))
+ok(match('one/t?o')('one/two'))
+ok(match('one/tw?')('one/two'))
+ok(match('o?e/tw?')('one/two'))
+ok(match('*n*')('one'))
+ok(match('*n*')('oonee'))
+ok(match('*n*')('n'))
+ok(match('o*n*e')('one'))
+ok(match('o*n*e')('oone'))
+ok(match('o*n*e')('onne'))
+ok(match('o*n*e')('oonne'))
+ok(match('*ne/*o')('ne/o'))
+ok(match('*ne/*o')('one/o'))
+ok(match('*ne/*o')('ne/two'))
+ok(match('*ne/*o')('one/two'))
+ok(match('*/*o')('/o'))
+ok(match('*/*o')('/two'))
+ok(match('*/*o')('one/two'))
+ok(match('?*')('one'))
+ok(match('?*/')('one/'))
+ok(match('?*/*')('one/'))
+ok(match('?*/*')('one/two'))
+ok(match('?*?')('oe'))
+ok(match('?*?')('one'))
+ok(match('?*?')('onnne'))
+ok(match('?*?/*')('one/'))
+ok(match('?*?/*')('one/two'))
+ok(match('?*?/*/*')('one/two/three'))
+ok(match('?*?/*/*')('one//'))
+ok(match('?*?/**')('oe'))
+ok(match('?*?/**')('one'))
+ok(match('?*?/**')('one/'))
+ok(match('?*?/**')('one/two'))
+ok(match('?*?/**')('one/two/three'))
+ok(match('?*?/**')('one/two/three/four'))
+ok(match('*/**/?*')('/o'))
+ok(match('*/**/?*')('/one'))
+ok(match('*/**/?*')('one/two'))
+ok(match('*/**/?*')('one/two/three'))
+ok(match('*/**/?*')('/two/three'))
+ok(match('*/**/?*')('one/two/three/four'))
+ok(match('**/?')('o'))
+ok(match('**/?')('one/t'))
+ok(match('**/?')('one/two/three/f'))
+ok(match('???/**/???')('one/two'))
+ok(match('???/**/???')('one/three/two'))
+ok(match('???/**/???')('one//two'))
+ok(match('o**')('o'))
+ok(match('o**')('one'))
+ok(match('o**')('onetwo'))
+ok(match('**e')('one'))
+ok(match('**e')('twoone'))
+ok(match('*e/**e')('one/one'))
+ok(match('*e/**e')('e/e'))
 
-      values.forEach(([pattern, sample]) => {
-        it(`'${pattern}' and '${sample}'`, () => {
-          let actual = wcm(pattern)(sample)
-          assert.strictEqual(actual, true)
-        })
-      })
-    })
-
-    describe("don't match", () => {
-      let values: [string, string][] = [
-        ['one', 'two'],
-        ['two', 'one'],
-        ['one/two', 'one/three'],
-        ['one/two/three', 'one/two/four'],
-        ['one', 'one.two'],
-        ['one.two', 'one'],
-        ['', 'one'],
-        ['one', 'one '],
-        [' one', 'one'],
-        ['one.two', 'one.two.three'],
-        ['one', 'one[].*+{}]][[..$'],
-        ['one[].*+{}]][[..$', 'one'],
-        ['[].*+{}]][[..$', '].*+{'],
-        ['', '**'],
-        ['', '*'],
-        ['/', ''],
-        ['/', 'one/'],
-        ['/', '/one'],
-        ['', ' '],
-        ['/', ' '],
-        ['/', ' /'],
-        ['/', '/ '],
-        ['/', ' / '],
-        ['one/two', 'one/*'],
-        ['one/two', 'one/**'],
-        ['one/two/three', 'one/*/three'],
-      ]
-
-      values.forEach(([pattern, sample]) => {
-        it(`'${pattern}' and '${sample}'`, () => {
-          let actual = wcm(pattern)(sample)
-          assert.strictEqual(actual, false)
-        })
-      })
-    })
-  })
-
-  describe('pattern contains wildcards, sample is a plain string', () => {
-    describe('match', () => {
-      let values: [string, string][] = [
-        ['*', ''],
-        ['*', 'one'],
-        ['*/*', 'one/two'],
-        ['*/*', 'one/'],
-        ['*/*', 'one/ '],
-        ['*/*/*', 'one/two/three'],
-        ['*/*/*', '//'],
-        ['**', ''],
-        ['**', ' '],
-        ['**', ' /'],
-        ['**', '/'],
-        ['**', '///'],
-        ['**', 'two'],
-        ['**', 'two/three'],
-        ['**', '   /three'],
-        ['**', '   /three///'],
-        ['**', '/three'],
-        ['**', '//three'],
-        ['*/**', ''],
-        ['*/**', ' '],
-        ['*/**', ' /'],
-        ['*/**', '/'],
-        ['*/**', '///'],
-        ['*/**', 'two'],
-        ['*/**', 'two/three'],
-        ['*/**', '   /three'],
-        ['*/**', '   /three///'],
-        ['*/**', '/three'],
-        ['*/**', '//three'],
-        ['**/*', 'one'],
-        ['**/*', 'one/two'],
-        ['**/*', 'one/two/three'],
-        ['**/*', 'one/*/three'],
-        ['**/*', 'one/*/**'],
-        ['*/**/*', 'one/two'],
-        ['*/**/*', 'one/two/three'],
-        ['*/**/*', 'one/two/three/four/five'],
-        ['*/**/*', 'one/two/*/four/five'],
-        ['*/**/*', 'one/two/*/four/**'],
-        ['*/**/*', 'one/ /three'],
-        ['*/**/*/**', 'one/two'],
-        ['*/**/*/**', 'one/two/three'],
-        ['one/*', 'one/two'],
-        ['one/*', 'one/*'],
-        ['one/*', 'one/**'],
-        ['one/*', 'one/***'],
-        ['one/*', 'one/'],
-        ['one/*', 'one/ '],
-        ['one/**', 'one'],
-        ['one/**', 'one/two'],
-        ['one/**', 'one/two/three'],
-        ['one/**', 'one/'],
-        ['one/**', 'one/ / '],
-        ['one/**', 'one/*/ **'],
-        ['one/**', 'one/***'],
-        ['one/*/**', 'one/two'],
-        ['one/*/**', 'one/two/three'],
-        ['one/*/**', 'one/two/three/four'],
-        ['one/*/**', 'one/ / '],
-        ['one/*/**', 'one/*/ **'],
-        ['one/*/**', 'one/***'],
-        ['one/*/three', 'one/two/three'],
-        ['one/*/three/', 'one/two/three/'],
-        ['one/*/three/*', 'one/two/three/'],
-        ['one/*/three/*', 'one/two/three/four'],
-        ['one/**/two', 'one/two'],
-        ['one/**/two/*', 'one/two/three'],
-        ['one/**/three', 'one/two/three'],
-        ['one/**/four', 'one/two/three/four'],
-        ['one/**/two/*', 'one/two/three'],
-        ['one/**/three/*', 'one/two/three/four'],
-        ['one*', 'one'],
-        ['*two', 'two'],
-        ['one*', 'onetwo'],
-        ['*two', 'onetwo'],
-        ['one*three', 'onetwothree'],
-        ['one*three', 'onethree'],
-        ['one/*three', 'one/twothree'],
-        ['one/two*', 'one/twothree'],
-        ['*/', '/'],
-        ['**/', '/one/'],
-        ['*/one', '/one'],
-        ['**/one', '/one'],
-        ['?', 'a'],
-        ['?', ' '],
-        ['??', 'ab'],
-        ['??', ' b'],
-        ['???', 'one'],
-        ['o?e', 'one'],
-        ['?ne', 'one'],
-        ['?ne', 'ane'],
-        ['on?', 'one'],
-        ['on?', 'ont'],
-        ['o??', 'one'],
-        ['o??', 'ota'],
-        ['?n?', 'one'],
-        ['one/t?o', 'one/two'],
-        ['one/tw?', 'one/two'],
-        ['o?e/tw?', 'one/two'],
-        ['*n*', 'one'],
-        ['*n*', 'oonee'],
-        ['*n*', 'n'],
-        ['o*n*e', 'one'],
-        ['o*n*e', 'oone'],
-        ['o*n*e', 'onne'],
-        ['o*n*e', 'oonne'],
-        ['*ne/*o', 'ne/o'],
-        ['*ne/*o', 'one/o'],
-        ['*ne/*o', 'ne/two'],
-        ['*ne/*o', 'one/two'],
-        ['*/*o', '/o'],
-        ['*/*o', '/two'],
-        ['*/*o', 'one/two'],
-        ['?*', 'one'],
-        ['?*/', 'one/'],
-        ['?*/*', 'one/'],
-        ['?*/*', 'one/two'],
-        ['?*?', 'oe'],
-        ['?*?', 'one'],
-        ['?*?', 'onnne'],
-        ['?*?/*', 'one/'],
-        ['?*?/*', 'one/two'],
-        ['?*?/*/*', 'one/two/three'],
-        ['?*?/*/*', 'one//'],
-        ['?*?/**', 'oe'],
-        ['?*?/**', 'one'],
-        ['?*?/**', 'one/'],
-        ['?*?/**', 'one/two'],
-        ['?*?/**', 'one/two/three'],
-        ['?*?/**', 'one/two/three/four'],
-        ['*/**/?*', '/o'],
-        ['*/**/?*', '/one'],
-        ['*/**/?*', 'one/two'],
-        ['*/**/?*', 'one/two/three'],
-        ['*/**/?*', '/two/three'],
-        ['*/**/?*', 'one/two/three/four'],
-        ['**/?', 'o'],
-        ['**/?', 'one/t'],
-        ['**/?', 'one/two/three/f'],
-        ['???/**/???', 'one/two'],
-        ['???/**/???', 'one/three/two'],
-        ['???/**/???', 'one//two'],
-        ['o**', 'o'],
-        ['o**', 'one'],
-        ['o**', 'onetwo'],
-        ['**e', 'one'],
-        ['**e', 'twoone'],
-        ['*e/**e', 'one/one'],
-        ['*e/**e', 'e/e'],
-      ]
-
-      values.forEach(([pattern, sample]) => {
-        it(`'${pattern}' and '${sample}'`, () => {
-          let actual = wcm(pattern)(sample)
-          assert.strictEqual(actual, true)
-        })
-      })
-    })
-
-    describe("don't match", () => {
-      let values: [string, string][] = [
-        ['*', '/'],
-        ['*', '//'],
-        ['*', 'one/two'],
-        ['*', 'one/'],
-        ['*', '/one'],
-        ['*/**/*', 'one'],
-        ['*/**/*/**', 'one'],
-        ['one/*', ''],
-        ['one/*', '/'],
-        ['one/*', '//'],
-        ['one/*', 'one/two/three'],
-        ['one/*', 'one'],
-        ['one/*', '/one'],
-        ['one/*', 'two/three'],
-        ['one/**', ''],
-        ['one/**', '/'],
-        ['one/**', '//'],
-        ['one/**', 'two'],
-        ['one/**', '/one'],
-        ['one/*/**', ''],
-        ['one/*/**', '/'],
-        ['one/*/**', '//'],
-        ['one/*/**', 'one'],
-        ['*/one', ''],
-        ['*/one', '/'],
-        ['*/one', '//'],
-        ['*/one', 'one/two/three'],
-        ['*/one', 'one'],
-        ['*/one', 'one/'],
-        ['*/one', 'one/two'],
-        ['**/one', ''],
-        ['**/one', '/'],
-        ['**/one', '//'],
-        ['**/one', 'two'],
-        ['**/one', 'one/'],
-        ['*/**/one', ''],
-        ['*/**/one', '/'],
-        ['*/**/one', '//'],
-        ['*/**/one', 'one'],
-        ['*/**/one', 'one/two'],
-        ['*/**/one', 'two/one/two'],
-        ['*two', 'one/two'],
-        ['**two', 'one/two'],
-        ['**two', 'one/two'],
-        ['**/', '/one'],
-        ['**/', '/one/two'],
-        ['?', ''],
-        ['?', '/'],
-        ['?', '/o'],
-        ['?', 'on'],
-        ['?', 'o/n'],
-        ['??', ''],
-        ['??', '/'],
-        ['??', '//'],
-        ['??', 'o'],
-        ['??', 'on/e'],
-        ['??', 'one'],
-        ['???', 'on'],
-        ['???', '/on'],
-        ['???', 'one/two'],
-        ['???', '/'],
-        ['???', '///'],
-        ['o?e', 'oe'],
-        ['?ne', 'ne'],
-        ['on?', 'on'],
-        ['on?', 'on/'],
-        ['?one', 'one'],
-        ['?one', '/one'],
-        ['o??', 'o//'],
-        ['o??', 'o/e'],
-        ['o??', 'o'],
-        ['o??', 'on/e'],
-        ['o???', 'on/e'],
-        ['one/t?o', 'one/to'],
-        ['one/tw?', 'one/tw/'],
-        ['o?e/tw?', 'onetwo'],
-        ['*n*', ''],
-        ['*n*', '/'],
-        ['*n*', 'n/'],
-        ['*n*', 'one/'],
-        ['*n*', '/n'],
-        ['*n*', '/n/'],
-        ['o*n*e', '/one'],
-        ['o*n*e', 'one/'],
-        ['o*n*e', 'o/ne'],
-        ['o*n*e', 'on/e'],
-        ['o*n*e', 'o/n/e'],
-        ['o*n*e', ' one '],
-        ['*ne/*o', '/ne/o'],
-        ['*/*o', '//o'],
-        ['*/*o', '/o/'],
-        ['?*', ''],
-        ['?*', '/'],
-        ['?*', 'one/'],
-        ['?*', '/one'],
-        ['?*/*', 'one'],
-        ['?*/*', 'one/two/'],
-        ['?*/*', 'one/two/three'],
-        ['?*?', 'o'],
-        ['?*?', '/one'],
-        ['?*?', 'o/e'],
-        ['?*?/*', ''],
-        ['?*?/*', 'one'],
-        ['?*?/*', 'one/two/three'],
-        ['?*?/*/*', ''],
-        ['?*?/*/*', 'one'],
-        ['?*?/*/*', 'one/two'],
-        ['?*?/*/*', 'one/two/three/four'],
-        ['?*?/*/*', 'o/two/three'],
-        ['?*?/**', ''],
-        ['?*?/**', '/'],
-        ['?*?/**', 'o'],
-        ['?*?/**', 'o/two'],
-        ['*/**/?*', ''],
-        ['*/**/?*', 'o'],
-        ['*/**/?*', 'o/'],
-        ['**/?', ''],
-        ['**/?', 'one'],
-        ['???/**/???', 'one/two/three'],
-        ['???/**/???', 'one'],
-        ['???/**/???', 'onetwo'],
-        ['o**', ''],
-        ['o**', 'two'],
-        ['o**', 'o/two'],
-        ['o**', 'o/two/three'],
-        ['**e', ''],
-        ['**e', 'two'],
-        ['**e', 'two/one'],
-        ['**e', 'three/two/one'],
-        ['*e/**e', 'one/two'],
-        ['*e/**e', 'two/e'],
-      ]
-
-      values.forEach(([pattern, sample]) => {
-        it(`'${pattern}' and '${sample}'`, () => {
-          let actual = wcm(pattern)(sample)
-          assert.strictEqual(actual, false)
-        })
-      })
-    })
-  })
-})
+// Don't match
+notOk(match('one')('two'))
+notOk(match('two')('one'))
+notOk(match('one/two')('one/three'))
+notOk(match('one/two/three')('one/two/four'))
+notOk(match('one')('one.two'))
+notOk(match('one.two')('one'))
+notOk(match('')('one'))
+notOk(match('one')('one '))
+notOk(match(' one')('one'))
+notOk(match('one.two')('one.two.three'))
+notOk(match('one')('one[].*+{}]][[..$'))
+notOk(match('one[].*+{}]][[..$')('one'))
+notOk(match('[].*+{}]][[..$')('].*+{'))
+notOk(match('')('**'))
+notOk(match('')('*'))
+notOk(match('/')(''))
+notOk(match('/')('one/'))
+notOk(match('/')('/one'))
+notOk(match('')(' '))
+notOk(match('/')(' '))
+notOk(match('/')(' /'))
+notOk(match('/')('/ '))
+notOk(match('/')(' / '))
+notOk(match('one/two')('one/*'))
+notOk(match('one/two')('one/**'))
+notOk(match('one/two/three')('one/*/three'))
+notOk(match('*')('/'))
+notOk(match('*')('//'))
+notOk(match('*')('one/two'))
+notOk(match('*')('one/'))
+notOk(match('*')('/one'))
+notOk(match('*/**/*')('one'))
+notOk(match('*/**/*/**')('one'))
+notOk(match('one/*')(''))
+notOk(match('one/*')('/'))
+notOk(match('one/*')('//'))
+notOk(match('one/*')('one/two/three'))
+notOk(match('one/*')('one'))
+notOk(match('one/*')('/one'))
+notOk(match('one/*')('two/three'))
+notOk(match('one/**')(''))
+notOk(match('one/**')('/'))
+notOk(match('one/**')('//'))
+notOk(match('one/**')('two'))
+notOk(match('one/**')('/one'))
+notOk(match('one/*/**')(''))
+notOk(match('one/*/**')('/'))
+notOk(match('one/*/**')('//'))
+notOk(match('one/*/**')('one'))
+notOk(match('*/one')(''))
+notOk(match('*/one')('/'))
+notOk(match('*/one')('//'))
+notOk(match('*/one')('one/two/three'))
+notOk(match('*/one')('one'))
+notOk(match('*/one')('one/'))
+notOk(match('*/one')('one/two'))
+notOk(match('**/one')(''))
+notOk(match('**/one')('/'))
+notOk(match('**/one')('//'))
+notOk(match('**/one')('two'))
+notOk(match('**/one')('one/'))
+notOk(match('*/**/one')(''))
+notOk(match('*/**/one')('/'))
+notOk(match('*/**/one')('//'))
+notOk(match('*/**/one')('one'))
+notOk(match('*/**/one')('one/two'))
+notOk(match('*/**/one')('two/one/two'))
+notOk(match('*two')('one/two'))
+notOk(match('**two')('one/two'))
+notOk(match('**two')('one/two'))
+notOk(match('**/')('/one'))
+notOk(match('**/')('/one/two'))
+notOk(match('?')(''))
+notOk(match('?')('/'))
+notOk(match('?')('/o'))
+notOk(match('?')('on'))
+notOk(match('?')('o/n'))
+notOk(match('??')(''))
+notOk(match('??')('/'))
+notOk(match('??')('//'))
+notOk(match('??')('o'))
+notOk(match('??')('on/e'))
+notOk(match('??')('one'))
+notOk(match('???')('on'))
+notOk(match('???')('/on'))
+notOk(match('???')('one/two'))
+notOk(match('???')('/'))
+notOk(match('???')('///'))
+notOk(match('o?e')('oe'))
+notOk(match('?ne')('ne'))
+notOk(match('on?')('on'))
+notOk(match('on?')('on/'))
+notOk(match('?one')('one'))
+notOk(match('?one')('/one'))
+notOk(match('o??')('o//'))
+notOk(match('o??')('o/e'))
+notOk(match('o??')('o'))
+notOk(match('o??')('on/e'))
+notOk(match('o???')('on/e'))
+notOk(match('one/t?o')('one/to'))
+notOk(match('one/tw?')('one/tw/'))
+notOk(match('o?e/tw?')('onetwo'))
+notOk(match('*n*')(''))
+notOk(match('*n*')('/'))
+notOk(match('*n*')('n/'))
+notOk(match('*n*')('one/'))
+notOk(match('*n*')('/n'))
+notOk(match('*n*')('/n/'))
+notOk(match('o*n*e')('/one'))
+notOk(match('o*n*e')('one/'))
+notOk(match('o*n*e')('o/ne'))
+notOk(match('o*n*e')('on/e'))
+notOk(match('o*n*e')('o/n/e'))
+notOk(match('o*n*e')(' one '))
+notOk(match('*ne/*o')('/ne/o'))
+notOk(match('*/*o')('//o'))
+notOk(match('*/*o')('/o/'))
+notOk(match('?*')(''))
+notOk(match('?*')('/'))
+notOk(match('?*')('one/'))
+notOk(match('?*')('/one'))
+notOk(match('?*/*')('one'))
+notOk(match('?*/*')('one/two/'))
+notOk(match('?*/*')('one/two/three'))
+notOk(match('?*?')('o'))
+notOk(match('?*?')('/one'))
+notOk(match('?*?')('o/e'))
+notOk(match('?*?/*')(''))
+notOk(match('?*?/*')('one'))
+notOk(match('?*?/*')('one/two/three'))
+notOk(match('?*?/*/*')(''))
+notOk(match('?*?/*/*')('one'))
+notOk(match('?*?/*/*')('one/two'))
+notOk(match('?*?/*/*')('one/two/three/four'))
+notOk(match('?*?/*/*')('o/two/three'))
+notOk(match('?*?/**')(''))
+notOk(match('?*?/**')('/'))
+notOk(match('?*?/**')('o'))
+notOk(match('?*?/**')('o/two'))
+notOk(match('*/**/?*')(''))
+notOk(match('*/**/?*')('o'))
+notOk(match('*/**/?*')('o/'))
+notOk(match('**/?')(''))
+notOk(match('**/?')('one'))
+notOk(match('???/**/???')('one/two/three'))
+notOk(match('???/**/???')('one'))
+notOk(match('???/**/???')('onetwo'))
+notOk(match('o**')(''))
+notOk(match('o**')('two'))
+notOk(match('o**')('o/two'))
+notOk(match('o**')('o/two/three'))
+notOk(match('**e')(''))
+notOk(match('**e')('two'))
+notOk(match('**e')('two/one'))
+notOk(match('**e')('three/two/one'))
+notOk(match('*e/**e')('one/two'))
+notOk(match('*e/**e')('two/e'))
