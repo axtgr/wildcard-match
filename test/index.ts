@@ -166,6 +166,20 @@ describe('wildcardMatch', function () {
         ['one/t?o', 'one/two'],
         ['one/tw?', 'one/two'],
         ['o?e/tw?', 'one/two'],
+        ['*n*', 'one'],
+        ['*n*', 'oonee'],
+        ['*n*', 'n'],
+        ['o*n*e', 'one'],
+        ['o*n*e', 'oone'],
+        ['o*n*e', 'onne'],
+        ['o*n*e', 'oonne'],
+        ['*ne/*o', 'ne/o'],
+        ['*ne/*o', 'one/o'],
+        ['*ne/*o', 'ne/two'],
+        ['*ne/*o', 'one/two'],
+        ['*/*o', '/o'],
+        ['*/*o', '/two'],
+        ['*/*o', 'one/two'],
       ]
 
       values.forEach(([pattern, sample]) => {
@@ -254,6 +268,21 @@ describe('wildcardMatch', function () {
         ['one/t?o', 'one/to'],
         ['one/tw?', 'one/tw/'],
         ['o?e/tw?', 'onetwo'],
+        ['*n*', ''],
+        ['*n*', '/'],
+        ['*n*', 'n/'],
+        ['*n*', 'one/'],
+        ['*n*', '/n'],
+        ['*n*', '/n/'],
+        ['o*n*e', '/one'],
+        ['o*n*e', 'one/'],
+        ['o*n*e', 'o/ne'],
+        ['o*n*e', 'on/e'],
+        ['o*n*e', 'o/n/e'],
+        ['o*n*e', ' one '],
+        ['*ne/*o', '/ne/o'],
+        ['*/*o', '//o'],
+        ['*/*o', '/o/'],
       ]
 
       values.forEach(([pattern, sample]) => {

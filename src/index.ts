@@ -47,7 +47,7 @@ function wildcardMatch(pattern: string, separator = DEFAULT_SEPARATOR): MatchFn 
       }
 
       segment = segment
-        .replace('\\*', `(((?!${escSeparator}).)*|)`)
+        .replace(/\\\*/g, `(((?!${escSeparator}).)*|)`)
         .replace(/\\\?/g, `(?!${escSeparator}).`)
 
       if (i < segments.length - 1) {
