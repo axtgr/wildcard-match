@@ -36,7 +36,9 @@ function wildcardMatch(pattern, separator = DEFAULT_SEPARATOR) {
                 }
                 return `${trimRight(result, escSeparator)}(${escSeparator}.*)?${escSeparator}`;
             }
-            segment = segment.replace('\\*', `(((?!${escSeparator}).)*|)`);
+            segment = segment
+                .replace('\\*', `(((?!${escSeparator}).)*|)`)
+                .replace(/\\\?/g, `(?!${escSeparator}).`);
             if (i < segments.length - 1) {
                 return `${result}${segment}${escSeparator}`;
             }
