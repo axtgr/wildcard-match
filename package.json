@@ -1,6 +1,6 @@
 {
   "name": "wildcard-match",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "description": "Check if a string matches a glob-like pattern containing ?, * and **",
   "author": "Alex Schneider <me@schneider.ax>",
   "repository": "https://github.com/axtgr/wildcard-match",
