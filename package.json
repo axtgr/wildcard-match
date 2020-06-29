@@ -18,7 +18,7 @@
   "scripts": {
     "build": "tsc",
     "lint": "eslint src test",
-    "test": "tap --jobs=1 --no-coverage test/**/*.ts"
+    "test": "tap --jobs=1 --no-coverage --reporter=terse test/**/*.ts"
   },
   "husky": {
     "hooks": {
