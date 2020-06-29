@@ -1,6 +1,7 @@
 interface MatchFn {
   (sample: string): boolean
   pattern: string
+  separator?: string
 }
 
 function escapeRegExpString(str: string) {
@@ -46,6 +47,7 @@ function wildcardMatch(pattern: string, separator?: string): MatchFn {
     // but making it optional is undesirable
     let match = (() => true) as MatchFn
     match.pattern = pattern
+    match.separator = separator
     return match
   }
 
@@ -65,6 +67,7 @@ function wildcardMatch(pattern: string, separator?: string): MatchFn {
   let regexp = new RegExp(`^${regexpPattern}$`)
   let match = ((sample: string) => regexp.test(sample)) as MatchFn
   match.pattern = pattern
+  match.separator = separator
   return match
 }
 

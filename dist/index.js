@@ -36,6 +36,7 @@ function wildcardMatch(pattern, separator) {
         // but making it optional is undesirable
         let match = (() => true);
         match.pattern = pattern;
+        match.separator = separator;
         return match;
     }
     let regexpPattern;
@@ -51,6 +52,7 @@ function wildcardMatch(pattern, separator) {
     let regexp = new RegExp(`^${regexpPattern}$`);
     let match = ((sample) => regexp.test(sample));
     match.pattern = pattern;
+    match.separator = separator;
     return match;
 }
 // Support both CommonJS and ES6-like modules.
