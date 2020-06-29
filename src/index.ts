@@ -19,6 +19,31 @@ function trimRight(str: string, substr: string) {
   return str
 }
 
+function transformPattern(pattern: string, separator: string) {
+  let segments = pattern.split(separator)
+  return segments.reduce((result, segment, i) => {
+    if (segment === '**') {
+      if (i === 0) {
+        return `(.*${separator})?`
+      } else if (i === segments.length - 1) {
+        return `${trimRight(result, separator)}(${separator}.*)?`
+      }
+      return `${trimRight(result, separator)}(${separator}.*)?${separator}`
+    }
+
+    // The order of these replacements is important because the latter contains a ?
+    segment = segment
+      .replace(/(?<!\\)\?/g, `(?!${separator}).`)
+      .replace(/(?<!\\)\*/g, `(((?!${separator}).)*|)`)
+
+    if (i < segments.length - 1) {
+      return `${result}${segment}${separator}`
+    }
+
+    return `${result}${segment}`
+  }, '')
+}
+
 function wildcardMatch(pattern: string, separator = DEFAULT_SEPARATOR): MatchFn {
   if (pattern === '**') {
     // @ts-expect-error: in this case the sample argument is not needed,
@@ -28,35 +53,14 @@ function wildcardMatch(pattern: string, separator = DEFAULT_SEPARATOR): MatchFn 
     return match
   }
 
-  let escPattern = escapeRegExpString(pattern)
   let escSeparator = escapeRegExpString(separator)
   let regexpPattern: string
 
   if (pattern === '*') {
     regexpPattern = `((?!${escSeparator}).)*`
   } else {
-    let segments = escPattern.split(escSeparator)
-    regexpPattern = segments.reduce((result, segment, i) => {
-      if (segment === '**') {
-        if (i === 0) {
-          return `(.*${escSeparator})?`
-        } else if (i === segments.length - 1) {
-          return `${trimRight(result, escSeparator)}(${escSeparator}.*)?`
-        }
-        return `${trimRight(result, escSeparator)}(${escSeparator}.*)?${escSeparator}`
-      }
-
-      // The order of these replacements is important because the latter contains a ?
-      segment = segment
-        .replace(/(?<!\\)\?/g, `(?!${escSeparator}).`)
-        .replace(/(?<!\\)\*/g, `(((?!${escSeparator}).)*|)`)
-
-      if (i < segments.length - 1) {
-        return `${result}${segment}${escSeparator}`
-      }
-
-      return `${result}${segment}`
-    }, '')
+    let escPattern = escapeRegExpString(pattern)
+    regexpPattern = transformPattern(escPattern, escSeparator)
   }
 
   let regexp = new RegExp(`^${regexpPattern}$`)
