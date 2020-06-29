@@ -1,6 +1,6 @@
 # wildcard-match
 
-Check if a string matches a pattern containing wildcards.
+Check if a string matches a glob-like pattern containing wildcards.
 
 ```js
 match('f?o*')('foobar')
@@ -32,15 +32,15 @@ It compiles the pattern and returns a function for matching strings with it.
 import wcm from 'wildcard-match'
 
 const match = wcm('foo*/b?r', '/')
-match('foo/bar') // true
-match('foobar') // false
+match('foo/bar') //=> true
+match('foobar') //=> false
 ```
 
 The returned function has `pattern` and `separator` properties set to the original values.
 
 ```js
-match.pattern // 'foo*/b?r'
-match.separator // '/'
+match.pattern //=> 'foo*/b?r'
+match.separator //=> '/'
 ```
 
 A pattern can have `?` and `*` escaped with a backslash so that they are treated as literal characters and not wildcards.
@@ -48,9 +48,9 @@ A pattern can have `?` and `*` escaped with a backslash so that they are treated
 ```js
 const match = wcm('foo\\*')
 
-match('foo') // false
-match('foobar') // false
-match('foo*') // true
+match('foo') //=> false
+match('foobar') //=> false
+match('foo*') //=> true
 ```
 
 When no separator is given, `**` acts as `*`.
@@ -58,33 +58,55 @@ When no separator is given, `**` acts as `*`.
 ```js
 const match = wcm('foo/**bar')
 
-match('foo/bar') // true
-match('foo/bazbar') // true
-match('foo/baz/qux/bar') // true
+match('foo/bar') //=> true
+match('foo/bazbar') //=> true
+match('foo/baz/qux/bar') //=> true
 ```
 
 ## Examples
 
 ```js
-const match = wcm('src/**/index.?s', '/')
+import wcm from 'wildcard-match'
 
-match('src/index.js') // true
-match('src/lib/index.ts') // true
-match('src/lib/component/test/index.ts') // true
-match('src') // false
-match('index.js') // false
-match('src/index.js/lib') // false
+// *? matches any non-empty substring
+const match = wcm('*?.js')
+
+match('index.js') //=> true
+match('src/index.js') //=> true
+match('.js') //=> false
+match('src') //=> false
 ```
 
 ```js
+import wcm from 'wildcard-match'
+
+const match = wcm('src/**/index.?s', '/')
+
+match('src/index.js') //=> true
+match('src/lib/index.ts') //=> true
+match('src/lib/component/test/index.ts') //=> true
+match('src') //=> false
+match('index.js') //=> false
+match('src/index.js/lib') //=> false
+```
+
+```js
+import wcm from 'wildcard-match'
+
 const match = wcm('**.*.example.com', '.')
 
-match('example.com') // false
-match('foo.example.com') // true
-match('foo.bar.example.com') // true
-match('foo.bar.baz.qux.example.com') // true
-match('foo.example.com.bar') // false
+match('example.com') //=> false
+match('foo.example.com') //=> true
+match('foo.bar.example.com') //=> true
+match('foo.bar.baz.qux.example.com') //=> true
+match('foo.example.com.bar') //=> false
 ```
+
+## Related
+
+- [minimatch](https://github.com/isaacs/minimatch)
+- [micromatch](https://github.com/micromatch/micromatch)
+- [matcher](https://github.com/sindresorhus/matcher)
 
 ## License
 
