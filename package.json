@@ -1,7 +1,7 @@
 {
   "name": "wildcard-match",
   "version": "2.0.1",
-  "description": "Check if a string matches a pattern containing * and ** wildcards",
+  "description": "Check if a string matches a pattern containing ?, * and **",
   "author": "Alex Schneider <me@schneider.ax>",
   "repository": "https://github.com/axtgr/wildcard-match",
   "license": "ISC",
