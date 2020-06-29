@@ -3,8 +3,6 @@ interface MatchFn {
   pattern: string
 }
 
-const DEFAULT_SEPARATOR = '/'
-
 let specialCharsRegExp = new RegExp('[-\\^$+.()|[\\]{}]', 'g')
 
 function escapeRegExpString(str: string) {
@@ -19,7 +17,7 @@ function trimRight(str: string, substr: string) {
   return str
 }
 
-function transformPattern(pattern: string, separator: string) {
+function transformPatternWithSeparators(pattern: string, separator: string) {
   let segments = pattern.split(separator)
   return segments.reduce((result, segment, i) => {
     if (segment === '**') {
@@ -44,7 +42,7 @@ function transformPattern(pattern: string, separator: string) {
   }, '')
 }
 
-function wildcardMatch(pattern: string, separator = DEFAULT_SEPARATOR): MatchFn {
+function wildcardMatch(pattern: string, separator?: string): MatchFn {
   if (pattern === '**') {
     // @ts-expect-error: in this case the sample argument is not needed,
     // but making it optional is undesirable
@@ -53,14 +51,17 @@ function wildcardMatch(pattern: string, separator = DEFAULT_SEPARATOR): MatchFn 
     return match
   }
 
-  let escSeparator = escapeRegExpString(separator)
   let regexpPattern: string
 
-  if (pattern === '*') {
-    regexpPattern = `((?!${escSeparator}).)*`
+  if (!separator) {
+    regexpPattern = escapeRegExpString(pattern).replace(/\?/g, '.').replace(/\*/g, '.*')
+  } else if (pattern === '*') {
+    regexpPattern = `((?!${escapeRegExpString(separator)}).)*`
   } else {
-    let escPattern = escapeRegExpString(pattern)
-    regexpPattern = transformPattern(escPattern, escSeparator)
+    regexpPattern = transformPatternWithSeparators(
+      escapeRegExpString(pattern),
+      escapeRegExpString(separator)
+    )
   }
 
   let regexp = new RegExp(`^${regexpPattern}$`)
