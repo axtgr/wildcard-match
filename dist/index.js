@@ -41,7 +41,9 @@ function wildcardMatch(pattern, separator) {
     }
     let regexpPattern;
     if (!separator) {
-        regexpPattern = escapeRegExpString(pattern).replace(/\?/g, '.').replace(/\*/g, '.*');
+        regexpPattern = escapeRegExpString(pattern)
+            .replace(/(?<!\\)\?/g, '.')
+            .replace(/(?<!\\)\*/g, '.*');
     }
     else if (pattern === '*') {
         regexpPattern = `((?!${escapeRegExpString(separator)}).)*`;
