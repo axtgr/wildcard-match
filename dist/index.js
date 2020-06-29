@@ -1,7 +1,6 @@
 "use strict";
-let specialCharsRegExp = new RegExp('[-\\^$+.()|[\\]{}]', 'g');
 function escapeRegExpString(str) {
-    return str.replace(specialCharsRegExp, '\\$&');
+    return str.replace(/[-^$+.()|[\]{}]/g, '\\$&');
 }
 function trimRight(str, substr) {
     if (str.substr(-substr.length) === substr) {

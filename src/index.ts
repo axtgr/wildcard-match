@@ -3,10 +3,8 @@ interface MatchFn {
   pattern: string
 }
 
-let specialCharsRegExp = new RegExp('[-\\^$+.()|[\\]{}]', 'g')
-
 function escapeRegExpString(str: string) {
-  return str.replace(specialCharsRegExp, '\\$&')
+  return str.replace(/[-^$+.()|[\]{}]/g, '\\$&')
 }
 
 function trimRight(str: string, substr: string) {
