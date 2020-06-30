@@ -3,7 +3,7 @@
 Check if a string matches a glob-like pattern containing wildcards.
 
 ```js
-match('f?o*')('foobar')
+match('wildc?rd-mat*')('wildcard-match')
 ```
 
 - `?` matches a single arbitrary character
@@ -11,7 +11,7 @@ match('f?o*')('foobar')
 
 When a separator such as `/` is provided, the above wildcards will only match non-separator characters, and the following is activated:
 
-- `**` matches any number of segments when used as a whole segment (i.e. `/**/` in the middle, `**/` or `/**` at the beginning/end of a string)
+- `**` matches any number of segments when used as a whole segment (i.e. `/**/` in the middle, `**/` at the beginning or `/**` at the end of a separated string)
 
 ```js
 match('src/**/*.?s', '/')('src/lib/component/index.js')
@@ -32,6 +32,7 @@ It compiles the pattern and returns a function for matching strings with it.
 import wcm from 'wildcard-match'
 
 const match = wcm('foo*/b?r', '/')
+
 match('foo/bar') //=> true
 match('foobar') //=> false
 ```
