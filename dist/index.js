@@ -8,7 +8,7 @@ function trimRight(str, substr) {
     }
     return str;
 }
-function transformPatternWithSeparators(pattern, separator) {
+function buildPatternWithSeparators(pattern, separator) {
     let segments = pattern.split(separator);
     return segments.reduce((result, segment, i) => {
         if (segment === '**') {
@@ -30,32 +30,29 @@ function transformPatternWithSeparators(pattern, separator) {
         return `${result}${segment}`;
     }, '');
 }
-function wildcardMatch(pattern, separator) {
+function buildRegExpPattern(pattern, separator) {
     if (pattern === '**') {
-        // @ts-expect-error: in this case the sample argument is not needed,
-        // but making it optional is undesirable
-        let match = (() => true);
-        match.pattern = pattern;
-        match.separator = separator;
-        return match;
+        return '^.*$';
     }
-    let regexpPattern;
+    let regExpPattern;
     if (!separator) {
-        regexpPattern = escapeRegExpString(pattern)
+        regExpPattern = escapeRegExpString(pattern)
             .replace(/(?<!\\)\?/g, '.')
             .replace(/(?<!\\)\*/g, '.*');
     }
     else if (pattern === '*') {
-        regexpPattern = `((?!${escapeRegExpString(separator)}).)*`;
+        regExpPattern = `((?!${escapeRegExpString(separator)}).)*`;
     }
     else {
-        regexpPattern = transformPatternWithSeparators(escapeRegExpString(pattern), escapeRegExpString(separator));
+        regExpPattern = buildPatternWithSeparators(escapeRegExpString(pattern), escapeRegExpString(separator));
     }
-    let regexp = new RegExp(`^${regexpPattern}$`);
-    let match = ((sample) => regexp.test(sample));
-    match.pattern = pattern;
-    match.separator = separator;
-    return match;
+    return `^${regExpPattern}$`;
+}
+function wildcardMatch(pattern, separator) {
+    let regexpPattern = buildRegExpPattern(pattern);
+    let regExp = new RegExp(regexpPattern);
+    regExp.separator = separator;
+    return regExp;
 }
 // Support both CommonJS and ES6-like modules.
 // Could be `wildcardMatch.default = wildcardMatch`, but TypeScript has a bug:

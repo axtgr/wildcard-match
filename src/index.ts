@@ -1,9 +1,3 @@
-interface MatchFn {
-  (sample: string): boolean
-  pattern: string
-  separator?: string
-}
-
 function escapeRegExpString(str: string) {
   return str.replace(/[-^$+.()|[\]{}]/g, '\\$&')
 }
@@ -16,7 +10,7 @@ function trimRight(str: string, substr: string) {
   return str
 }
 
-function transformPatternWithSeparators(pattern: string, separator: string) {
+function buildPatternWithSeparators(pattern: string, separator: string) {
   let segments = pattern.split(separator)
   return segments.reduce((result, segment, i) => {
     if (segment === '**') {
@@ -41,36 +35,38 @@ function transformPatternWithSeparators(pattern: string, separator: string) {
   }, '')
 }
 
-function wildcardMatch(pattern: string, separator?: string): MatchFn {
+function buildRegExpPattern(pattern: string, separator?: string) {
   if (pattern === '**') {
-    // @ts-expect-error: in this case the sample argument is not needed,
-    // but making it optional is undesirable
-    let match = (() => true) as MatchFn
-    match.pattern = pattern
-    match.separator = separator
-    return match
+    return '^.*$'
   }
 
-  let regexpPattern: string
+  let regExpPattern: string
 
   if (!separator) {
-    regexpPattern = escapeRegExpString(pattern)
+    regExpPattern = escapeRegExpString(pattern)
       .replace(/(?<!\\)\?/g, '.')
       .replace(/(?<!\\)\*/g, '.*')
   } else if (pattern === '*') {
-    regexpPattern = `((?!${escapeRegExpString(separator)}).)*`
+    regExpPattern = `((?!${escapeRegExpString(separator)}).)*`
   } else {
-    regexpPattern = transformPatternWithSeparators(
+    regExpPattern = buildPatternWithSeparators(
       escapeRegExpString(pattern),
       escapeRegExpString(separator)
     )
   }
 
-  let regexp = new RegExp(`^${regexpPattern}$`)
-  let match = ((sample: string) => regexp.test(sample)) as MatchFn
-  match.pattern = pattern
-  match.separator = separator
-  return match
+  return `^${regExpPattern}$`
+}
+
+function wildcardMatch(pattern: string, separator?: string) {
+  let regexpPattern = buildRegExpPattern(pattern, separator)
+  let regExp = new RegExp(regexpPattern) as RegExp & {
+    pattern?: string
+    separator?: string
+  }
+  regExp.pattern = pattern
+  regExp.separator = separator
+  return regExp
 }
 
 // Support both CommonJS and ES6-like modules.
