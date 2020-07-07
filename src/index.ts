@@ -35,7 +35,12 @@ function buildPatternWithSeparators(pattern: string, separator: string) {
   }, '')
 }
 
-function buildRegExpPattern(pattern: string, separator?: string) {
+function buildRegExpPattern(pattern: string | string[], separator?: string): string {
+  if (Array.isArray(pattern)) {
+    let regExpPatterns = pattern.map((p) => `^${buildRegExpPattern(p, separator)}$`)
+    return `(${regExpPatterns.join('|')})`
+  }
+
   if (pattern === '**') {
     return '^.*$'
   }
@@ -58,10 +63,10 @@ function buildRegExpPattern(pattern: string, separator?: string) {
   return `^${regExpPattern}$`
 }
 
-function wildcardMatch(pattern: string, separator?: string) {
+function wildcardMatch(pattern: string | string[], separator?: string) {
   let regexpPattern = buildRegExpPattern(pattern, separator)
   let regExp = new RegExp(regexpPattern) as RegExp & {
-    pattern?: string
+    pattern?: string | string[]
     separator?: string
   }
   regExp.pattern = pattern
