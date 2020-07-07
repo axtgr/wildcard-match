@@ -1,3 +1,7 @@
+interface Options {
+  separator?: string
+}
+
 function escapeRegExpString(str: string) {
   return str.replace(/[-^$+.()|[\]{}]/g, '\\$&')
 }
@@ -63,14 +67,15 @@ function buildRegExpPattern(pattern: string | string[], separator?: string): str
   return `^${regExpPattern}$`
 }
 
-function wildcardMatch(pattern: string | string[], separator?: string) {
-  let regexpPattern = buildRegExpPattern(pattern, separator)
+function wildcardMatch(pattern: string | string[], separator?: string | Options) {
+  let options: Options = typeof separator === 'object' ? separator : { separator }
+  let regexpPattern = buildRegExpPattern(pattern, options.separator)
   let regExp = new RegExp(regexpPattern) as RegExp & {
     pattern?: string | string[]
-    separator?: string
+    options: Options
   }
   regExp.pattern = pattern
-  regExp.separator = separator
+  regExp.options = options
   return regExp
 }
 

@@ -31,6 +31,10 @@ function buildPatternWithSeparators(pattern, separator) {
     }, '');
 }
 function buildRegExpPattern(pattern, separator) {
+    if (Array.isArray(pattern)) {
+        let regExpPatterns = pattern.map((p) => `^${buildRegExpPattern(p, separator)}$`);
+        return `(${regExpPatterns.join('|')})`;
+    }
     if (pattern === '**') {
         return '^.*$';
     }
@@ -49,9 +53,11 @@ function buildRegExpPattern(pattern, separator) {
     return `^${regExpPattern}$`;
 }
 function wildcardMatch(pattern, separator) {
-    let regexpPattern = buildRegExpPattern(pattern);
+    let options = typeof separator === 'object' ? separator : { separator };
+    let regexpPattern = buildRegExpPattern(pattern, options.separator);
     let regExp = new RegExp(regexpPattern);
-    regExp.separator = separator;
+    regExp.pattern = pattern;
+    regExp.options = options;
     return regExp;
 }
 // Support both CommonJS and ES6-like modules.
