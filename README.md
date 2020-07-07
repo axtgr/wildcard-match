@@ -1,9 +1,12 @@
 # wildcard-match
 
-Check if a string matches a glob-like pattern containing wildcards.
+Compile a glob-like pattern into a regular expression.
 
 ```js
-match('wildc?rd-mat*')('wildcard-match')
+import wcm from 'wildcard-match'
+
+const regExp = wcm('wildc?rd-mat*')
+regExp.test('wildcard-match') //=> true
 ```
 
 - `?` matches a single arbitrary character
@@ -14,7 +17,7 @@ When a separator such as `/` is provided, the above wildcards will only match no
 - `**` matches any number of segments when used as a whole segment (i.e. `/**/` in the middle, `**/` at the beginning or `/**` at the end of a separated string)
 
 ```js
-match('src/**/*.?s', '/')('src/lib/component/index.js')
+wcm('src/**/*.?s', '/').test('src/lib/component/index.js') //=> true
 ```
 
 ## Install
@@ -23,45 +26,60 @@ match('src/**/*.?s', '/')('src/lib/component/index.js')
 
 ## Usage
 
-### wildcardMatch(pattern, separator?): MatchFn
+### wildcardMatch(pattern, separator?): RegExp
 
-The default export is a function that takes a pattern and an optional separator.
-It compiles the pattern and returns a function for matching strings with it.
+The default export is a function that takes a string or an array of strings and an optional
+separator (or an options object with a _separator_ property). It compiles the pattern into
+a RegExp object that can be used to match strings with the pattern.
 
 ```js
 import wcm from 'wildcard-match'
 
-const match = wcm('foo*/b?r', '/')
+const regExp = wcm('foo*/b?r', '/')
 
-match('foo/bar') //=> true
-match('foobar') //=> false
+regExp.test('foo/bar') //=> true
+regExp.test('foobar') //=> false
 ```
 
-The returned function has `pattern` and `separator` properties set to the original values.
+```js
+const regExp = wcm(['one.*', '*.two'], { separator: '.' })
+
+regExp.test('one.two') //=> true
+regExp.test('one.three') //=> true
+regExp.test('three.two') //=> true
+regExp.test('one') //=> false
+regExp.test('two') //=> false
+regExp.test('one.two.three') //=> false
+regExp.test('three.false') //=> false
+```
+
+The returned RegExp has `pattern` and `options` properties set to the original values.
 
 ```js
-match.pattern //=> 'foo*/b?r'
-match.separator //=> '/'
+const regExp = wcm('p?tt?rn', '/')
+
+match.pattern //=> 'p?tt?rn'
+match.options //=> { separator: '/' }
 ```
 
 A pattern can have `?` and `*` escaped with a backslash so that they are treated as literal characters and not wildcards.
 
 ```js
-const match = wcm('foo\\*')
+const regExp = wcm('foo\\*')
 
-match('foo') //=> false
-match('foobar') //=> false
-match('foo*') //=> true
+regExp.test('foo') //=> false
+regExp.test('foobar') //=> false
+regExp.test('foo*') //=> true
 ```
 
 When no separator is given, `**` acts as `*`.
 
 ```js
-const match = wcm('foo/**bar')
+const regExp = wcm('foo/**bar')
 
-match('foo/bar') //=> true
-match('foo/bazbar') //=> true
-match('foo/baz/qux/bar') //=> true
+regExp.test('foo/bar') //=> true
+regExp.test('foo/bazbar') //=> true
+regExp.test('foo/baz/qux/bar') //=> true
 ```
 
 ## Examples
@@ -70,41 +88,42 @@ match('foo/baz/qux/bar') //=> true
 import wcm from 'wildcard-match'
 
 // *? matches any non-empty substring
-const match = wcm('*?.js')
+const regExp = wcm('*?.js')
 
-match('index.js') //=> true
-match('src/index.js') //=> true
-match('.js') //=> false
-match('src') //=> false
+regExp.test('index.js') //=> true
+regExp.test('src/index.js') //=> true
+regExp.test('.js') //=> false
+regExp.test('src') //=> false
 ```
 
 ```js
 import wcm from 'wildcard-match'
 
-const match = wcm('src/**/index.?s', '/')
+const regExp = wcm('src/**/index.?s', '/')
 
-match('src/index.js') //=> true
-match('src/lib/index.ts') //=> true
-match('src/lib/component/test/index.ts') //=> true
-match('src') //=> false
-match('index.js') //=> false
-match('src/index.js/lib') //=> false
+regExp.test('src/index.js') //=> true
+regExp.test('src/lib/index.ts') //=> true
+regExp.test('src/lib/component/test/index.ts') //=> true
+regExp.test('src') //=> false
+regExp.test('index.js') //=> false
+regExp.test('src/index.js/lib') //=> false
 ```
 
 ```js
 import wcm from 'wildcard-match'
 
-const match = wcm('**.*.example.com', '.')
+const regExp = wcm('**.*.example.com', '.')
 
-match('example.com') //=> false
-match('foo.example.com') //=> true
-match('foo.bar.example.com') //=> true
-match('foo.bar.baz.qux.example.com') //=> true
-match('foo.example.com.bar') //=> false
+regExp.test('example.com') //=> false
+regExp.test('foo.example.com') //=> true
+regExp.test('foo.bar.example.com') //=> true
+regExp.test('foo.bar.baz.qux.example.com') //=> true
+regExp.test('foo.example.com.bar') //=> false
 ```
 
 ## Related
 
+- [globrex](https://github.com/terkelg/globrex)
 - [minimatch](https://github.com/isaacs/minimatch)
 - [micromatch](https://github.com/micromatch/micromatch)
 - [matcher](https://github.com/sindresorhus/matcher)

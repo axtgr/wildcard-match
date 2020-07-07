@@ -1,7 +1,7 @@
 {
   "name": "wildcard-match",
   "version": "3.0.0",
-  "description": "Check if a string matches a glob-like pattern containing ?, * and **",
+  "description": "Compile a glob-like pattern into a regular expression",
   "author": "Alex Schneider <me@schneider.ax>",
   "repository": "https://github.com/axtgr/wildcard-match",
   "license": "ISC",
@@ -9,7 +9,8 @@
     "match",
     "wildcard",
     "glob",
-    "pattern"
+    "pattern",
+    "regexp"
   ],
   "main": "dist/index.js",
   "files": [
