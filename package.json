@@ -1,6 +1,6 @@
 {
   "name": "wildcard-match",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "Compile a glob-like pattern into a regular expression",
   "author": "Alex Schneider <me@schneider.ax>",
   "repository": "https://github.com/axtgr/wildcard-match",
