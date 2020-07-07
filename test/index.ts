@@ -480,7 +480,7 @@ tap.test('?, * and **', (t) => {
   t.end()
 })
 
-tap.test('Different separators are supported', (t) => {
+tap.test('Supports different separators', (t) => {
   t.ok(wcm('', undefined).test(''))
   t.ok(wcm('one', undefined).test('one'))
   t.ok(wcm('o?e', undefined).test('one'))
@@ -502,7 +502,7 @@ tap.test('Different separators are supported', (t) => {
   t.end()
 })
 
-tap.test('RegExp characters are treated literally', (t) => {
+tap.test('Treats RegExp characters literally', (t) => {
   t.ok(wcm('[].').test('[].'))
   t.ok(wcm('one[].*+{}]  ][[..$', '/').test('one[].*+{}]  ][[..$'))
   t.notOk(wcm('[].').test('[]?'))
@@ -512,7 +512,7 @@ tap.test('RegExp characters are treated literally', (t) => {
   t.end()
 })
 
-tap.test('Escaped wildcards are treated literally', (t) => {
+tap.test('Treats escaped wildcards literally', (t) => {
   t.test('No separator given', (t) => {
     t.ok(wcm('\\?').test('?'))
     t.ok(wcm('one/\\*\\*').test('one/**'))
@@ -549,7 +549,7 @@ tap.test('Escaped wildcards are treated literally', (t) => {
   t.end()
 })
 
-tap.test('Supports an array of patterns', (t) => {
+tap.test('Accepts an array of patterns', (t) => {
   t.ok(wcm(['one']).test('one'))
   t.notOk(wcm(['one']).test('two'))
   t.ok(wcm(['**', 'one']).test('whatever'))
