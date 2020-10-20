@@ -1,0 +1,33 @@
+name: Create a GitHub Release
+
+on:
+  workflow_dispatch:
+  push:
+    tags: 'v*.*.*'
+
+jobs:
+  release:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [14]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Wait for the CI workflow to complete
+        id: wait-for-ci
+        uses: fountainhead/action-wait-for-check@v1.0.0
+        with:
+          checkName: ci
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Fail if CI has failed
+        if: steps.wait-for-ci.outputs.conclusion != 'success'
+        run: exit 1
+      - name: Check out the repository
+        uses: actions/checkout@v2
+      - name: Create a GitHub release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}

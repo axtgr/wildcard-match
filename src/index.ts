@@ -79,9 +79,4 @@ function wildcardMatch(pattern: string | string[], separator?: string | Options)
   return regExp
 }
 
-// Support both CommonJS and ES6-like modules.
-// Could be `wildcardMatch.default = wildcardMatch`, but TypeScript has a bug:
-// https://github.com/microsoft/TypeScript/issues/32470
-// eslint-disable-next-line dot-notation
-wildcardMatch['default'] = wildcardMatch
-export = wildcardMatch
+export default wildcardMatch

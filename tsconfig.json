@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
-    "outDir": "dist",
-    "target": "ES2015",
-    "declaration": true,
-    "module": "CommonJS",
+    "target": "ES5",
+    "module": "ESNext",
     "moduleResolution": "node",
-    "sourceMap": true,
-    "esModuleInterop": true,
-    "strict": true
-  },
-  "include": ["src"]
+    "declaration": true,
+    "strict": true,
+    // The below properties are needed to run the tests
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "downlevelIteration": true
+  }
 }

@@ -4,26 +4,32 @@
   "parserOptions": {
     "sourceType": "module"
   },
+  "globals": {
+    "console": true
+  },
+  "env": {
+    "commonjs": true
+  },
+  "plugins": ["@typescript-eslint", "prettier", "es5"],
   "extends": [
     "eslint:recommended",
-    "problems",
     "plugin:@typescript-eslint/recommended",
     "prettier",
-    "prettier/@typescript-eslint"
+    "prettier/@typescript-eslint",
+    "plugin:es5/no-es2015"
   ],
-  "plugins": ["@typescript-eslint", "prefer-let", "prettier"],
-  "env": {
-    "es2020": true,
-    "browser": true,
-    "node": true
-  },
   "rules": {
     "prettier/prettier": "error",
     "prefer-const": "off",
-    "prefer-let/prefer-let": "error",
-    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "es5/no-block-scoping": "off",
+    "es5/no-modules": "off",
+    "es5/no-shorthand-properties": "off",
+    "es5/no-template-literals": "off",
+    "es5/no-arrow-functions": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/ban-ts-comment": "off",
-    "@typescript-eslint/no-empty-function": "off"
+    "@typescript-eslint/no-empty-function": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-var-requires": "off"
   }
 }
