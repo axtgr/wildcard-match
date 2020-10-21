@@ -177,6 +177,8 @@ function wildcardMatch(pattern: string | string[], separator?: string | boolean)
     throw new TypeError(`Separator must be a string, but ${typeof separator} given`)
   }
 
+  separator = typeof separator === 'undefined' ? true : separator
+
   let regexpPattern = compile(pattern, separator)
   let regexp = new RegExp(`^${regexpPattern}$`)
 

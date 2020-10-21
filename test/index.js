@@ -3,7 +3,7 @@ let wcmatch = require('../build')
 module.exports = function (t) {
   t.test('Basic', (t) => {
     t.equal(wcmatch('pattern').pattern, 'pattern')
-    t.equal(wcmatch('pattern').separator, undefined)
+    t.equal(wcmatch('pattern').separator, true)
     t.ok(wcmatch('pattern').regexp instanceof RegExp)
   })
 
@@ -13,7 +13,7 @@ module.exports = function (t) {
       t.ok(wcmatch('/')('/'))
       t.ok(wcmatch('one')('one'))
       t.ok(wcmatch('one/two')('one/two'))
-      t.notOk(wcmatch('')('/'))
+      t.ok(wcmatch('')('/'))
       t.notOk(wcmatch('a/b')('a.b'))
       t.notOk(wcmatch('one')('two'))
     })
@@ -58,11 +58,11 @@ module.exports = function (t) {
   t.test('?', (t) => {
     t.test('No separator given - matches 1 arbitrary char', (t) => {
       t.ok(wcmatch('?')('o'))
-      t.ok(wcmatch('?')('/'))
       t.ok(wcmatch('on?')('one'))
       t.ok(wcmatch('???')('one'))
       t.ok(wcmatch('???')('two'))
-      t.ok(wcmatch('one?two')('one/two'))
+      t.notOk(wcmatch('?')('/'))
+      t.notOk(wcmatch('one?two')('one/two'))
       t.notOk(wcmatch('?')(''))
       t.notOk(wcmatch('?')('on'))
       t.notOk(wcmatch('??e')('on'))
@@ -126,7 +126,7 @@ module.exports = function (t) {
       t.ok(wcmatch('*')('/'))
       t.ok(wcmatch('*')('one'))
       t.ok(wcmatch('one*')('one'))
-      t.ok(wcmatch('one*')('one/two'))
+      t.notOk(wcmatch('one*')('one/two'))
       t.notOk(wcmatch('one*')('on'))
       t.notOk(wcmatch('one*')('ont'))
       t.notOk(wcmatch('one*')('onte'))
@@ -218,7 +218,7 @@ module.exports = function (t) {
       t.ok(wcmatch('**')('/'))
       t.ok(wcmatch('**')('one'))
       t.ok(wcmatch('one**')('one'))
-      t.ok(wcmatch('one**')('one/two'))
+      t.notOk(wcmatch('one**')('one/two'))
       t.notOk(wcmatch('one**')('on'))
       t.notOk(wcmatch('one**')('ont'))
       t.notOk(wcmatch('one**')('onte'))
@@ -282,8 +282,8 @@ module.exports = function (t) {
     t.test('No separator given', (t) => {
       t.ok(wcmatch('?*')('o'))
       t.ok(wcmatch('?*')('one'))
-      t.ok(wcmatch('?*')('one/two'))
-      t.ok(wcmatch('?ne*')('one/two'))
+      t.notOk(wcmatch('?*')('one/two'))
+      t.notOk(wcmatch('?ne*')('one/two'))
       t.notOk(wcmatch('?*')(''))
       t.notOk(wcmatch('one?*')('one'))
       t.notOk(wcmatch('?ne*')('ne/two'))
@@ -330,8 +330,8 @@ module.exports = function (t) {
       t.ok(wcmatch('one**/*')('one/two'))
       t.ok(wcmatch('one*/**')('one/two'))
       t.ok(wcmatch('**one*/**')('one/two'))
-      t.notOk(wcmatch('**/*')(''))
-      t.notOk(wcmatch('**/*')('one'))
+      t.ok(wcmatch('**/*')('one'))
+      t.ok(wcmatch('**/*')(''))
       t.notOk(wcmatch('one**/*')('one'))
     })
 
@@ -392,8 +392,8 @@ module.exports = function (t) {
     t.test('No separator given', (t) => {
       t.ok(wcmatch('?**')('o'))
       t.ok(wcmatch('?**')('one'))
-      t.ok(wcmatch('?**')('one/two'))
-      t.ok(wcmatch('?ne**')('one/two'))
+      t.notOk(wcmatch('?**')('one/two'))
+      t.notOk(wcmatch('?ne**')('one/two'))
       t.notOk(wcmatch('?**')(''))
       t.notOk(wcmatch('one?**')('one'))
       t.notOk(wcmatch('?ne**')('ne/two'))
@@ -418,8 +418,15 @@ module.exports = function (t) {
     t.test('No separator given', (t) => {
       t.ok(wcmatch('?*/**')('one/two'))
       t.ok(wcmatch('?*/?**')('one/two'))
-      t.notOk(wcmatch('?*/**')('one'))
+      t.ok(wcmatch('?*/**')('one'))
       t.notOk(wcmatch('?*/**')('/two'))
+    })
+
+    t.test('Separator === true', (t) => {
+      t.ok(wcmatch('?*/**', true)('one/two'))
+      t.ok(wcmatch('?*/?**', true)('one/two'))
+      t.ok(wcmatch('?*/**', true)('one'))
+      t.notOk(wcmatch('?*/**', true)('/two'))
     })
 
     t.test('Separator given', (t) => {
