@@ -25,7 +25,7 @@ export default {
       dir: OUT_DIR,
       format: 'umd',
       sourcemap: true,
-      name: 'wildcard-match',
+      name: 'wcmatch',
       exports: 'default',
       entryFileNames: '[name].umd.js',
       plugins: [terser()],

@@ -3,7 +3,7 @@ var Suite = require('benchmark').Suite
 var globrex = require('globrex')
 var picomatch = require('picomatch')
 var matcher = require('matcher')
-var wcm = require('../build')
+var wcmatch = require('../build')
 
 function formatNumber(number) {
   return String(number.toFixed(0))
@@ -47,8 +47,8 @@ function sample() {
 }
 
 var OPTIONS = {
-  wcm: false,
-  wcmSep: true,
+  wcmatch: false,
+  wcmatchSep: true,
   globrex: { globstar: false, filepath: false, extended: true, strict: false },
   globrexSep: { globstar: true, filepath: true, extended: true, strict: false },
   picomatchSep: {
@@ -62,8 +62,8 @@ var OPTIONS = {
   },
 }
 var MATCHERS = {
-  wcm: wcm(pattern(), OPTIONS.wcm),
-  wcmSep: wcm(pattern(), OPTIONS.wcmSep),
+  wcmatch: wcmatch(pattern(), OPTIONS.wcmatch),
+  wcmatchSep: wcmatch(pattern(), OPTIONS.wcmatchSep),
   globrex: globrex(pattern(), OPTIONS.globrex).regex,
   globrexSep: globrex(pattern(), OPTIONS.globrexSep).regex,
   picomatchSep: picomatch(pattern(), OPTIONS.picomatchSep),
@@ -92,8 +92,8 @@ new Suite('Compilation')
   .add('globrex separated', compile(globrex, OPTIONS.globrexSep))
   .add('picomatch', compile(picomatch))
   .add('picomatch separated', compile(picomatch, OPTIONS.picomatchSep))
-  .add('wildcard-match', compile(wcm, OPTIONS.wcm))
-  .add('wildcard-match separated', compile(wcm, OPTIONS.wcmSep))
+  .add('wildcard-match', compile(wcmatch, OPTIONS.wcmatch))
+  .add('wildcard-match separated', compile(wcmatch, OPTIONS.wcmatchSep))
   .on('start', handleStart)
   .on('cycle', handleCycle)
   .run()
@@ -103,8 +103,8 @@ new Suite('Matching')
   .add('globrex', match(MATCHERS.globrex))
   .add('globrex separated', match(MATCHERS.globrexSep))
   .add('picomatch separated', match(MATCHERS.picomatchSep))
-  .add('wildcard-match', match(MATCHERS.wcm))
-  .add('wildcard-match separated', match(MATCHERS.wcmSep))
+  .add('wildcard-match', match(MATCHERS.wcmatch))
+  .add('wildcard-match separated', match(MATCHERS.wcmatchSep))
   .on('start', handleStart)
   .on('cycle', handleCycle)
   .run()
