@@ -2,6 +2,7 @@ devDependencies:
   '@typescript-eslint/eslint-plugin': 3.4.0_15ebbbb8363c75064fc079244e83c2c7
   '@typescript-eslint/parser': 3.4.0_eslint@7.3.1+typescript@3.9.5
   '@wessberg/rollup-plugin-ts': 1.3.5_rollup@2.32.0+typescript@3.9.5
+  benchmark: 2.1.4
   core-js: 3.6.5
   eslint: 7.3.1
   eslint-config-prettier: 6.11.0_eslint@7.3.1
@@ -9,7 +10,10 @@ devDependencies:
   eslint-plugin-es5: 1.5.0_eslint@7.3.1
   eslint-plugin-prefer-let: 1.0.1
   eslint-plugin-prettier: 3.1.4_eslint@7.3.1+prettier@2.0.5
+  globrex: 0.1.2
   husky: 4.2.5
+  matcher: 3.0.0
+  picomatch: 2.2.2
   prettier: 2.0.5
   pta: 0.1.3
   rollup: 2.32.0
@@ -1330,6 +1334,13 @@ packages:
     dev: true
     resolution:
       integrity: sha1-ibTRmasr7kneFk6gK4nORi1xt2c=
+  /benchmark/2.1.4:
+    dependencies:
+      lodash: 4.17.20
+      platform: 1.3.6
+    dev: true
+    resolution:
+      integrity: sha1-CfPeMckWQl1JjMLuVloOvzwqVik=
   /brace-expansion/1.1.11:
     dependencies:
       balanced-match: 1.0.0
@@ -1623,6 +1634,12 @@ packages:
       node: '>=0.8.0'
     resolution:
       integrity: sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=
+  /escape-string-regexp/4.0.0:
+    dev: true
+    engines:
+      node: '>=10'
+    resolution:
+      integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==
   /eslint-config-prettier/6.11.0_eslint@7.3.1:
     dependencies:
       eslint: 7.3.1
@@ -1969,6 +1986,10 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-7dUi7RvCoT/xast/o/dLN53oqND4yk0nsHkhRgn9w65C4PofCLOoJ39iSOg+qVDdWQPIEj+eszMHQ+aLVwwQSg==
+  /globrex/0.1.2:
+    dev: true
+    resolution:
+      integrity: sha512-uHJgbwAMwNFf5mLst7IWLNg14x1CkeqglJb/K3doi4dw6q2IvAAmM/Y81kevy83wP+Sst+nutFTYOGg3d1lsxg==
   /graceful-fs/4.2.4:
     dev: true
     resolution:
@@ -2258,6 +2279,14 @@ packages:
     dev: true
     resolution:
       integrity: sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==
+  /matcher/3.0.0:
+    dependencies:
+      escape-string-regexp: 4.0.0
+    dev: true
+    engines:
+      node: '>=10'
+    resolution:
+      integrity: sha512-OkeDaAZ/bQCxeFAozM55PKcKU0yJMPGifLwV4Qgjitu+5MoAfSQN4lsLJeXZ1b8w0x+/Emda6MZgXS1jvsapng==
   /merge-stream/2.0.0:
     dev: true
     resolution:
@@ -2454,6 +2483,10 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==
+  /platform/1.3.6:
+    dev: true
+    resolution:
+      integrity: sha512-fnWVljUchTro6RiCFvCXBbNhJc2NijN7oIQxbwsyL0buWJPG85v81ehlHI9fXrJsMNgTofEoWIQeClKpgxFLrg==
   /please-upgrade-node/3.2.0:
     dependencies:
       semver-compare: 1.0.0
@@ -3031,6 +3064,7 @@ specifiers:
   '@typescript-eslint/eslint-plugin': ^3.4.0
   '@typescript-eslint/parser': ^3.4.0
   '@wessberg/rollup-plugin-ts': ^1.3.5
+  benchmark: ^2.1.4
   core-js: ^3.6.5
   eslint: ^7.3.1
   eslint-config-prettier: ^6.11.0
@@ -3038,7 +3072,10 @@ specifiers:
   eslint-plugin-es5: ^1.5.0
   eslint-plugin-prefer-let: ^1.0.1
   eslint-plugin-prettier: ^3.1.4
+  globrex: ^0.1.2
   husky: ^4.2.5
+  matcher: ^3.0.0
+  picomatch: ^2.2.2
   prettier: ^2.0.5
   pta: ^0.1.3
   rollup: ^2.32.0

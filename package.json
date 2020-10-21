@@ -27,6 +27,7 @@
   ],
   "scripts": {
     "build": "rollup -c",
+    "bench": "node bench/bench",
     "lint": "eslint {src,test}/*",
     "format": "eslint --cache --fix {src,test}/* && prettier --write **/*.md",
     "test": "ts-node -T -r \"core-js/modules/es.symbol.async-iterator\" -I \" \" node_modules/pta/src/cli.js --no-esm test/[!_]*.js"
@@ -40,6 +41,7 @@
     "@typescript-eslint/eslint-plugin": "^3.4.0",
     "@typescript-eslint/parser": "^3.4.0",
     "@wessberg/rollup-plugin-ts": "^1.3.5",
+    "benchmark": "^2.1.4",
     "core-js": "^3.6.5",
     "eslint": "^7.3.1",
     "eslint-config-prettier": "^6.11.0",
@@ -47,7 +49,10 @@
     "eslint-plugin-es5": "^1.5.0",
     "eslint-plugin-prefer-let": "^1.0.1",
     "eslint-plugin-prettier": "^3.1.4",
+    "globrex": "^0.1.2",
     "husky": "^4.2.5",
+    "matcher": "^3.0.0",
+    "picomatch": "^2.2.2",
     "prettier": "^2.0.5",
     "pta": "^0.1.3",
     "rollup": "^2.32.0",
