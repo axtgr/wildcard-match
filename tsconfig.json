@@ -1,4 +1,7 @@
 {
+  // Although rollup-plugin-ts overrides this property when building the library,
+  // it is still needed for editor plugins
+  "files": ["src/index.ts"],
   "compilerOptions": {
     "target": "ES5",
     "module": "ESNext",
