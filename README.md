@@ -1,133 +1,269 @@
-# wildcard-match
+<br>
 
-Compile a glob-like pattern into a regular expression.
+<h1 align="center">wildcard-match</h1>
 
-```js
-import wcm from 'wildcard-match'
+<p align="center">
+  <strong>A tiny but extremely fast JavaScript library for matching basic glob patterns</strong>
+</p>
 
-const regExp = wcm('wildc?rd-mat*')
-regExp.test('wildcard-match') //=> true
+<p align="center">
+  <a href="https://www.npmjs.com/package/wildcard-match"><img src="https://img.shields.io/npm/v/wildcard-match" alt="npm package"></a>
+  &nbsp;
+  <a href="https://github.com/axtgr/wildcard-match/actions"><img src="https://img.shields.io/github/workflow/status/axtgr/wildcard-match/CI?label=CI&logo=github" alt="CI"></a>
+  &nbsp;
+  <a href="https://www.buymeacoffee.com/axtgr"><img src="https://img.shields.io/badge/%F0%9F%8D%BA-Buy%20me%20a%20beer-red?style=flat" alt="Buy me a beer"></a>
+</p>
+
+<br>
+
+Wildcard-match takes one or more basic glob patterns, compiles them into a RegExp and returns a function for matching strings with it.
+
+Glob patterns are strings that contain `?`, `*` and `**` wildcards. When such a pattern is compared with another string, these wildcards can replace one or more symbols. For example, `src/*` would match both `src/foo` and `src/bar`.
+
+This library's goal is to be as small and as fast as possible while supporting only the most basic wildcards. If you need character ranges, extended globs, braces and other advanced features, check out [outmatch](https://github.com/axtgr/outmatch).
+
+## Quickstart
+
+```
+npm install wildcard-match
 ```
 
-- `?` matches a single arbitrary character
-- `*` matches zero or more arbitrary characters
-
-When a separator such as `/` is provided, the above wildcards will only match non-separator characters, and the following is activated:
-
-- `**` matches any number of segments when used as a whole segment (i.e. `/**/` in the middle, `**/` at the beginning or `/**` at the end of a separated string)
-
 ```js
-wcm('src/**/*.?s', '/').test('src/lib/component/index.js') //=> true
+import wcmatch from 'wildcard-match'
+
+const isMatch = wcmatch('src/**/*.?s')
+
+isMatch('src/components/header/index.js') //=> true
+isMatch('src/README.md') //=> false
+
+isMatch.pattern //=> 'src/**/*.?s'
+isMatch.separator //=> true
+isMatch.regexp //=> /^src[/\\]+?(?:[^/\\]*?[/\\]+?)*?[^/\\]*?\.[^/\\]s[/\\]*?$/
 ```
 
-## Install
+More details are available in the [Installation](#installation), [Usage](#usage) and [API](#api) sections.
 
-`npm install wildcard-match`
+## Features
+
+<table>
+  <tr>
+    <td align="center">🍃</td>
+    <td><strong>Lightweight</strong><br>No dependencies. Just <strong>750</strong> bytes when minified and gzipped</td>
+  </tr>
+  <tr>
+    <td align="center">🏎</td>
+    <td><strong>Fast</strong><br>Compiles and matches patterns faster than any other known library</td>
+  </tr>
+  <tr>
+    <td align="center">🌞</td>
+    <td><strong>Simple</strong><br>The API is a single function. The number of available options is <strong>1</strong></td>
+  </tr>
+  <tr>
+    <td align="center">⚒</td>
+    <td><strong>Reliable</strong><br>Written in TypeScript. Covered by hundreds of unit tests</td>
+  </tr>
+  <tr>
+    <td align="center">🔌</td>
+    <td><strong>Compatible</strong><br>Works in any ES5 environment including older versions of Node.js, Deno, React Native and browsers</td>
+  </tr>
+</table>
+
+For comparison with the alternatives, see the [corresponding section](#comparison).
+
+## Installation
+
+The package is distributed via the npm package registry. It can be installed using one of the compatible package managers or included directly from a CDN.
+
+#### [npm](https://www.npmjs.com)
+
+```
+npm install wildcard-match
+```
+
+#### [Yarn](https://yarnpkg.com)
+
+```
+yarn add wildcard-match
+```
+
+#### [pnpm](https://pnpm.js.org)
+
+```
+pnpm install wildcard-match
+```
+
+#### CDN
+
+When included from a CDN, wildcard-match is available as the global function `wcmatch`.
+
+- [unpkg](https://unpkg.com/wildcard-match)
+- [jsDelivr](https://www.jsdelivr.com/package/npm/wildcard-match)
 
 ## Usage
 
-### wildcardMatch(pattern, separator?): RegExp
+Wildcard-match comes built in ESM, CommonJS and UMD formats and includes TypeScript typings. The examples use ESM imports, which can be replaced with the following line for CommonJS: `const wcmatch = require('wildcard-match')`.
 
-The default export is a function that takes a string or an array of strings and an optional
-separator (or an options object with a _separator_ property). It compiles the pattern into
-a RegExp object that can be used to match strings with the pattern.
+The default export is a function that takes two arguments: a glob pattern and, if needed, a separator. It compiles them into a regular expression and returns a function (usually called `isMatch` in the examples) that tests strings against the pattern. The pattern, separator and the compiled RegExp object are available as properties on the returned function:
 
 ```js
-import wcm from 'wildcard-match'
+import wcmatch from 'wildcard-match'
 
-const regExp = wcm('foo*/b?r', '/')
+const isMatch = wcmatch('src/?ar', '/')
 
-regExp.test('foo/bar') //=> true
-regExp.test('foobar') //=> false
+isMatch('src/bar') //=> true
+isMatch('src/car') //=> true
+isMatch('src/cvar') //=> false
+
+isMatch.pattern //=> 'src/?ar'
+isMatch.separator //=> '/'
+isMatch.regexp //=> /^src\/+?[^/]ar\/*?$/
 ```
+
+The returned function can be invoked immediately if there is no need to match a pattern more than once:
 
 ```js
-const regExp = wcm(['one.*', '*.two'], { separator: '.' })
-
-regExp.test('one.two') //=> true
-regExp.test('one.three') //=> true
-regExp.test('three.two') //=> true
-regExp.test('one') //=> false
-regExp.test('two') //=> false
-regExp.test('one.two.three') //=> false
-regExp.test('three.false') //=> false
+wcmatch('src/**/*.js')('src/components/body/index.js') //=> true
 ```
 
-The returned RegExp has `pattern` and `options` properties set to the original values.
+Compiling a pattern is much slower than comparing a string to it, so it is recommended to always reuse the returned function when possible.
+
+### Syntax
+
+Wildcard-match supports the following glob syntax in patterns:
+
+- `?` matches exactly one arbitrary character excluding separators
+- `*` matches zero or more arbitrary characters excluding separators
+- `**` matches any number of segments when used as a whole segment in a separated pattern (e.g. <code>/\*\*/</code> if <code>/</code> is the separator)
+- `\` escapes the following character making it be treated literally
+
+More features are available in the [outmatch](https://github.com/axtgr/outmatch) library.
+
+### File Paths and Separators
+
+Globs are most often used to search file paths, which are, essentially, strings split into segments by slashes. While other libraries are usually restricted to this use-case, wildcard-match is able to work with _arbitrary_ strings by accepting a custom separator as the second parameter:
 
 ```js
-const regExp = wcm('p?tt?rn', '/')
+const matchDomain = wcmatch('*.example.com', { separator: '.' })
+matchDomain('subdomain.example.com') //=> true
 
-match.pattern //=> 'p?tt?rn'
-match.options //=> { separator: '/' }
+const matchLike = wcmatch('wh?t like**like mean', { separator: 'like' })
+matchLike('what like do like you like mean') //=> true
 ```
 
-A pattern can have `?` and `*` escaped with a backslash so that they are treated as literal characters and not wildcards.
+The only limitation is that backslashes `\` cannot be used as separators in patterns because wildcard-match uses them for character escaping. However, when a custom separator is not specified (or it is `true`), `/` in patterns will match both `/` and `\` in samples:
 
 ```js
-const regExp = wcm('foo\\*')
+const isMatch = wcmatch('foo/bar')
 
-regExp.test('foo') //=> false
-regExp.test('foobar') //=> false
-regExp.test('foo*') //=> true
+isMatch('foo/bar') //=> true
+isMatch('foo\bar') //=> true
 ```
 
-When no separator is given, `**` acts as `*`.
+Matching features work with a _segment_ rather than a whole pattern:
 
 ```js
-const regExp = wcm('foo/**bar')
+const isMatch = wcmatch('foo/b*')
 
-regExp.test('foo/bar') //=> true
-regExp.test('foo/bazbar') //=> true
-regExp.test('foo/baz/qux/bar') //=> true
+isMatch('foo/bar') //=> true
+isMatch('foo/b/ar') //=> false
 ```
 
-## Examples
+Segmentation can be turned off completely by passing `false` as the separator, which makes wildcard-match treat whole patterns as a single segment. Slashes become regular symbols and `*` matches _anything_:
 
 ```js
-import wcm from 'wildcard-match'
-
-// *? matches any non-empty substring
-const regExp = wcm('*?.js')
-
-regExp.test('index.js') //=> true
-regExp.test('src/index.js') //=> true
-regExp.test('.js') //=> false
-regExp.test('src') //=> false
+const isMatch = wcmatch('foo?ba*', false)
+isMatch('foo/bar/qux') //=> true
 ```
+
+A single separator in a pattern will match any number of separators in a sample string:
 
 ```js
-import wcm from 'wildcard-match'
-
-const regExp = wcm('src/**/index.?s', '/')
-
-regExp.test('src/index.js') //=> true
-regExp.test('src/lib/index.ts') //=> true
-regExp.test('src/lib/component/test/index.ts') //=> true
-regExp.test('src') //=> false
-regExp.test('index.js') //=> false
-regExp.test('src/index.js/lib') //=> false
+wcmatch('foo/bar/baz')('foo/bar///baz') //=> true
 ```
+
+When a pattern has an explicit separator at its end, samples also require one or more trailing separators:
 
 ```js
-import wcm from 'wildcard-match'
+const isMatch = wcmatch('foo/bar/')
 
-const regExp = wcm('**.*.example.com', '.')
-
-regExp.test('example.com') //=> false
-regExp.test('foo.example.com') //=> true
-regExp.test('foo.bar.example.com') //=> true
-regExp.test('foo.bar.baz.qux.example.com') //=> true
-regExp.test('foo.example.com.bar') //=> false
+isMatch('foo/bar') //=> false
+isMatch('foo/bar/') //=> true
+isMatch('foo/bar///') //=> true
 ```
 
-## Related
+However, if there is no trailing separator in a pattern, strings will match even if they have separators at the end:
 
-- [globrex](https://github.com/terkelg/globrex)
-- [minimatch](https://github.com/isaacs/minimatch)
-- [micromatch](https://github.com/micromatch/micromatch)
-- [matcher](https://github.com/sindresorhus/matcher)
+```js
+const isMatch = wcmatch('foo/bar')
 
-## License
+isMatch('foo/bar') //=> true
+isMatch('foo/bar/') //=> true
+isMatch('foo/bar///') //=> true
+```
 
-[ISC](LICENSE)
+### Multiple Patterns
+
+Wildcard-match can take an array of glob patterns as the first argument instead of a single pattern. In that case a string will be considered a match if it matches _any_ of the given patterns:
+
+```js
+const isMatch = wcmatch(['src/*', 'tests/*'])
+
+isMatch('src/utils.js') //=> true
+isMatch('tests/utils.js') //=> true
+```
+
+### Matching Arrays of Strings
+
+The returned function can work with arrays of strings when used as the predicate of the native array methods:
+
+```js
+const isMatch = wcmatch('src/*.js')
+const paths = ['readme.md', 'src/index.js', 'src/components/body.js']
+
+paths.map(isMatch) //=> [ false, true, false ]
+paths.filter(isMatch) //=> [ 'src/index.js' ]
+paths.some(isMatch) //=> true
+paths.every(isMatch) //=> false
+paths.find(isMatch) //=> 'src/index.js'
+paths.findIndex(isMatch) //=> 1
+```
+
+## API
+
+### wcmatch(patterns, separator?): isMatch
+
+Takes a single pattern string or an array of patterns and compiles them into a regular expression. Returns an isMatch function that takes a sample string as its only argument and returns true if the string matches the pattern(s).
+
+### isMatch(sample): boolean
+
+Tests if a sample string matches the patterns that were used to compile the regular expression and create this function.
+
+### isMatch.regexp
+
+The compiled regular expression.
+
+### isMatch.pattern
+
+The original pattern or array of patterns that was used to compile the regular expression and create the isMatch function.
+
+### isMatch.separator
+
+The separator that was used to compile the regular expression and create the isMatch function.
+
+## Comparison
+
+```
+Pattern: src/test/**/*.?s
+Sample: src/test/foo/bar.js
+
+Compilation
+  wildcard-match     1,046,326 ops/sec
+  picomatch            261,589 ops/sec
+
+Matching
+  wildcard-match     34,646,993 ops/sec
+  picomatch          10,750,888 ops/sec
+  matcher             1,740,904 ops/sec
+```
+
+A better comparison is in the works.
