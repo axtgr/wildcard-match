@@ -10,22 +10,19 @@
   "env": {
     "commonjs": true
   },
-  "plugins": ["@typescript-eslint", "prettier", "es5"],
+  "plugins": ["@typescript-eslint", "prettier"],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier",
-    "prettier/@typescript-eslint",
-    "plugin:es5/no-es2015"
+    "prettier/@typescript-eslint"
   ],
   "rules": {
     "prettier/prettier": "error",
     "prefer-const": "off",
-    "es5/no-block-scoping": "off",
-    "es5/no-modules": "off",
-    "es5/no-shorthand-properties": "off",
-    "es5/no-template-literals": "off",
-    "es5/no-arrow-functions": "off",
+    "prefer-template": "error",
+    "prefer-destructuring": "error",
+    "prefer-arrow-callback": "error",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/no-empty-function": "off",

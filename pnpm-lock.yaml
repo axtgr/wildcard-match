@@ -7,7 +7,6 @@ devDependencies:
   eslint: 7.3.1
   eslint-config-prettier: 6.11.0_eslint@7.3.1
   eslint-config-problems: 4.0.0_eslint@7.3.1
-  eslint-plugin-es5: 1.5.0_eslint@7.3.1
   eslint-plugin-prefer-let: 1.0.1
   eslint-plugin-prettier: 3.1.4_eslint@7.3.1+prettier@2.0.5
   globrex: 0.1.2
@@ -1658,14 +1657,6 @@ packages:
       eslint: ^6.0.0 || ^5.0.0
     resolution:
       integrity: sha512-81bplJP6QglOK9/5wxEOd7um0tgq2Kd0fLW9907dZaXq/7LpG26Q/8Uh8Qg2ppI6xe1v5LVdRpk69yHEa/anyA==
-  /eslint-plugin-es5/1.5.0_eslint@7.3.1:
-    dependencies:
-      eslint: 7.3.1
-    dev: true
-    peerDependencies:
-      eslint: '>= 3.0.0'
-    resolution:
-      integrity: sha512-Qxmfo7v2B7SGAEURJo0dpBweFf+JU15kSyALfiB2rXWcBuJ96r6X9kFHXFnhdopPHCaHjoQs1xQPUJVbGMb1AA==
   /eslint-plugin-prefer-let/1.0.1:
     dependencies:
       requireindex: 1.1.0
@@ -3069,7 +3060,6 @@ specifiers:
   eslint: ^7.3.1
   eslint-config-prettier: ^6.11.0
   eslint-config-problems: ^4.0.0
-  eslint-plugin-es5: ^1.5.0
   eslint-plugin-prefer-let: ^1.0.1
   eslint-plugin-prettier: ^3.1.4
   globrex: ^0.1.2

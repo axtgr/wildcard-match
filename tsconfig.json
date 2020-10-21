@@ -8,6 +8,20 @@
     "moduleResolution": "node",
     "declaration": true,
     "strict": true,
+
+    // Without this option TS includes all the types from node_modules/@types, which
+    // include ES6 types, which we don't want
+    "types": [],
+
+    // We use a subset of ES6 syntax that can be transpiled to ES5 without the need
+    // for polyfills: arrow functions, template literals and destructuring. TypeScript
+    // requires tslib to be imported for this even if it doesn't emit any helpers.
+    // This opens up a possibility for accidentally using a feature that does emit
+    // a helper without noticing it. This option could prevent this, but rollup-plugin-ts
+    // overrides it, so for now we have to manually check that the output files don't
+    // include any functions starting with __.
+    // "noEmitHelpers": true,
+
     // The below properties are needed to run the tests
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
