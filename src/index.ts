@@ -193,6 +193,10 @@ function wildcardMatch(
 
   options = options || { separator: true }
 
+  if (options.separator === '\\') {
+    throw new Error('\\ is not a valid separator')
+  }
+
   let regexpPattern = compile(pattern, options)
   let regexp = new RegExp(`^${regexpPattern}$`)
 
