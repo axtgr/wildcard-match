@@ -40,7 +40,7 @@ function compile(pattern: string | string[], options: WildcardMatchOptions): str
     return `(?:${regExpPatterns.join('|')})`
   }
 
-  let separator = options.separator
+  let separator = typeof options.separator === 'undefined' ? true : options.separator
   let separatorSplitter = ''
   let separatorMatcher = ''
   let wildcard = '.'
@@ -193,7 +193,7 @@ function wildcardMatch(
     )
   }
 
-  options = options || { separator: true }
+  options = options || {}
 
   if (options.separator === '\\') {
     throw new Error('\\ is not a valid separator')
