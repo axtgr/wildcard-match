@@ -37,7 +37,7 @@ isMatch('src/components/header/index.js') //=> true
 isMatch('src/README.md') //=> false
 
 isMatch.pattern //=> 'src/**/*.?s'
-isMatch.separator //=> true
+isMatch.options //=> { separator: true }
 isMatch.regexp //=> /^src[/\\]+?(?:[^/\\]*?[/\\]+?)*?[^/\\]*?\.[^/\\]s[/\\]*?$/
 ```
 
@@ -103,19 +103,19 @@ When included from a CDN, wildcard-match is available as the global function `wc
 
 Wildcard-match comes built in ESM, CommonJS and UMD formats and includes TypeScript typings. The examples use ESM imports, which can be replaced with the following line for CommonJS: `const wcmatch = require('wildcard-match')`.
 
-The default export is a function that takes two arguments: a glob pattern and, if needed, a separator. It compiles them into a regular expression and returns a function (usually called `isMatch` in the examples) that tests strings against the pattern. The pattern, separator and the compiled RegExp object are available as properties on the returned function:
+The default export is a function of two arguments, first of which can be either a single glob string or an array of such patterns. The second argument is optional and can be either an [options](#options) object or a separator (which will be the value of the `separator` option). Wildcard-match compiles them into a regular expression and returns a function (usually called `isMatch` in the examples) that tests strings against the pattern. The pattern, options and the compiled RegExp object are available as properties on the returned function:
 
 ```js
 import wcmatch from 'wildcard-match'
 
-const isMatch = wcmatch('src/?ar', '/')
+const isMatch = wcmatch('src/?ar', '@')
 
 isMatch('src/bar') //=> true
 isMatch('src/car') //=> true
 isMatch('src/cvar') //=> false
 
 isMatch.pattern //=> 'src/?ar'
-isMatch.separator //=> '/'
+isMatch.options //=> { separator: '@' }
 isMatch.regexp //=> /^src\/+?[^/]ar\/*?$/
 ```
 
@@ -150,13 +150,23 @@ const matchLike = wcmatch('wh?t like**like mean', { separator: 'like' })
 matchLike('what like do like you like mean') //=> true
 ```
 
-The only limitation is that backslashes `\` cannot be used as separators in patterns because wildcard-match uses them for character escaping. However, when a custom separator is not specified (or it is `true`), `/` in patterns will match both `/` and `\` in samples:
+The only limitation is that backslashes `\` cannot be used as separators in patterns because
+wildcard-match uses them for character escaping. However, when `separator` is `undefined`
+or `true`, `/` in patterns will match both `/` and `\`, so a single pattern with forward
+slashes can match both Unix and Windows paths:
 
 ```js
-const isMatch = wcmatch('foo/bar')
+const isMatchA = outmatch('foo\\bar') // throws an error
 
-isMatch('foo/bar') //=> true
-isMatch('foo\bar') //=> true
+const isMatchB = outmatch('foo/bar') // same as passing `true` as the separator
+
+isMatchB('foo/bar') //=> true
+isMatchB('foo\\bar') //=> true
+
+const isMatchC = outmatch('foo/bar', '/')
+
+isMatchC('foo/bar') //=> true
+isMatchC('foo\\bar') //=> false
 ```
 
 Matching features work with a _segment_ rather than a whole pattern:
@@ -230,7 +240,7 @@ paths.findIndex(isMatch) //=> 1
 
 ## API
 
-### wcmatch(patterns, separator?): isMatch
+### wcmatch(patterns, options?): isMatch<br>wcmatch(patterns, separator?): isMatch
 
 Takes a single pattern string or an array of patterns and compiles them into a regular expression. Returns an isMatch function that takes a sample string as its only argument and returns true if the string matches the pattern(s).
 
@@ -246,9 +256,15 @@ The compiled regular expression.
 
 The original pattern or array of patterns that was used to compile the regular expression and create the isMatch function.
 
-### isMatch.separator
+### isMatch.options
 
-The separator that was used to compile the regular expression and create the isMatch function.
+The options object that was used to compile the regular expression and create the isMatch function.
+
+### Options
+
+| Option      | Type              | Default Value | Description                                                                                                                                                                                          |
+| ----------- | ----------------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `separator` | boolean \| string | true          | Defines the separator used to split patterns and samples into segments<ul><li>`true` — `/` in patterns match both `/` and `\` in samples<li>`false` — don't split<li>_any string_ — custom separator |
 
 ## Comparison
 
@@ -263,7 +279,6 @@ Compilation
 Matching
   wildcard-match     34,646,993 ops/sec
   picomatch          10,750,888 ops/sec
-  matcher             1,740,904 ops/sec
 ```
 
 A better comparison is in the works.
