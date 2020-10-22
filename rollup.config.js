@@ -38,30 +38,38 @@ export default {
       plugins: [],
     },
   ],
-  external: ['path'],
   plugins: [
     del({ targets: `${OUT_DIR}/*` }),
-    typescript({
-      transformers: (() => {
+    typescript(
+      (() => {
         // We don't want to transform the default export for the ES bundle. However,
-        // there is apparently no way to tell what the current bundle is in the context
-        // of this function, so we simply count the bundles and disable the transformation
-        // for the third one.
-        let counter = 0
-        return ({ program }) => {
-          return {
-            before: transformMacros(program),
-            afterDeclarations:
-              ++counter === 3
-                ? undefined
-                : transformDefaultExport(program, {
-                    allowNamedExports: true,
-                    keepOriginalExport: false,
-                  }),
-          }
+        // there is apparently no way to tell what the current output format is
+        // in the context of the transformer factory, so we do it in a hacky way.
+        let currentFormat
+        return {
+          hook: {
+            outputPath(path, kind) {
+              if (kind === 'declaration') {
+                if (path.endsWith('.es.d.ts')) {
+                  currentFormat = 'es'
+                } else if (path.endsWith('.umd.d.ts')) {
+                  currentFormat = 'umd'
+                } else {
+                  currentFormat = 'cjs'
+                }
+              }
+            },
+          },
+          transformers: ({ program }) => {
+            return {
+              before: transformMacros(program),
+              afterDeclarations:
+                currentFormat === 'es' ? undefined : transformDefaultExport(program),
+            }
+          },
         }
-      })(),
-    }),
+      })()
+    ),
     // Remove all comments except JSDoc
     cleanup({
       comments: /^\*/,
