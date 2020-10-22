@@ -1,6 +1,5 @@
 /* eslint-disable */
 
-import Path from 'path'
 import del from 'rollup-plugin-delete'
 import { terser } from 'rollup-plugin-terser'
 import typescript from '@wessberg/rollup-plugin-ts'
@@ -35,7 +34,7 @@ export default {
       dir: OUT_DIR,
       format: 'es',
       sourcemap: true,
-      entryFileNames: '[name].mjs',
+      entryFileNames: '[name].es.mjs',
       plugins: [],
     },
   ],
@@ -43,25 +42,25 @@ export default {
   plugins: [
     del({ targets: `${OUT_DIR}/*` }),
     typescript({
-      transformers: ({ program }) => ({
-        before: transformMacros(program),
-        afterDeclarations: transformDefaultExport(program, {
-          allowNamedExports: true,
-          keepOriginalExport: true,
-        }),
-      }),
-      hook: {
-        // Do not generate more than one declaration file
-        outputPath: (path, kind) => {
-          if (kind === 'declaration') {
-            return Path.join(
-              Path.dirname(path),
-              Path.basename(INPUT_FILE, Path.extname(INPUT_FILE)) + '.d.ts'
-            )
+      transformers: (() => {
+        // We don't want to transform the default export for the ES bundle. However,
+        // there is apparently no way to tell what the current bundle is in the context
+        // of this function, so we simply count the bundles and disable the transformation
+        // for the third one.
+        let counter = 0
+        return ({ program }) => {
+          return {
+            before: transformMacros(program),
+            afterDeclarations:
+              ++counter === 3
+                ? undefined
+                : transformDefaultExport(program, {
+                    allowNamedExports: true,
+                    keepOriginalExport: false,
+                  }),
           }
-          return path
-        },
-      },
+        }
+      })(),
     }),
     // Remove all comments except JSDoc
     cleanup({
