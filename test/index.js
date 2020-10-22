@@ -3,7 +3,7 @@ let wcmatch = require('../build')
 module.exports = function (t) {
   t.test('Basic', (t) => {
     t.equal(wcmatch('pattern').pattern, 'pattern')
-    t.equal(wcmatch('pattern').separator, true)
+    t.equal(wcmatch('pattern').options, { separator: true })
     t.ok(wcmatch('pattern').regexp instanceof RegExp)
   })
 

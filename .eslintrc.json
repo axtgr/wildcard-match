@@ -21,7 +21,7 @@
     "prettier/prettier": "error",
     "prefer-const": "off",
     "prefer-template": "error",
-    "prefer-destructuring": "error",
+    "prefer-destructuring": "off",
     "prefer-arrow-callback": "error",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/ban-ts-comment": "off",

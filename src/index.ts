@@ -1,3 +1,7 @@
+interface WildcardMatchOptions {
+  separator?: string | boolean
+}
+
 function escapeRegExpChar(char: string) {
   if (
     char === '-' ||
@@ -30,12 +34,13 @@ function escapeRegExpString(str: string) {
   return result
 }
 
-function compile(pattern: string | string[], separator?: string | boolean): string {
+function compile(pattern: string | string[], options: WildcardMatchOptions): string {
   if (Array.isArray(pattern)) {
-    let regExpPatterns = pattern.map((p) => `^${compile(p, separator)}$`)
+    let regExpPatterns = pattern.map((p) => `^${compile(p, options)}$`)
     return `(?:${regExpPatterns.join('|')})`
   }
 
+  let separator = options.separator
   let separatorSplitter = ''
   let separatorMatcher = ''
   let wildcard = '.'
@@ -135,8 +140,8 @@ interface isMatch {
   /** The original pattern or array of patterns that was used to compile the RegExp */
   pattern: string | string[]
 
-  /** The separator that was used to split the pattern into segments */
-  separator?: string | boolean
+  /** The options that were used to compile the RegExp */
+  options: WildcardMatchOptions
 }
 
 function isMatch(regexp: RegExp, sample: string) {
@@ -162,30 +167,39 @@ function isMatch(regexp: RegExp, sample: string) {
  * isMatch('foo.bar.com') //=> false
  * ```
  */
-function wildcardMatch(pattern: string | string[], separator?: string | boolean) {
+function wildcardMatch(
+  pattern: string | string[],
+  options?: string | boolean | WildcardMatchOptions
+) {
   if (typeof pattern !== 'string' && !Array.isArray(pattern)) {
     throw new TypeError(
-      `Pattern must be a string or an array of strings, but ${typeof pattern} given`
+      `The first argument must be a single pattern string or an array of patterns, but ${typeof pattern} given`
     )
   }
 
-  if (
-    typeof separator !== 'undefined' &&
-    typeof separator !== 'string' &&
-    typeof separator !== 'boolean'
-  ) {
-    throw new TypeError(`Separator must be a string, but ${typeof separator} given`)
+  if (typeof options === 'string' || typeof options === 'boolean') {
+    options = { separator: options }
   }
 
-  separator = typeof separator === 'undefined' ? true : separator
+  if (
+    arguments.length === 2 &&
+    (Array.isArray(options) ||
+      (typeof options !== 'object' && typeof options !== 'undefined'))
+  ) {
+    throw new TypeError(
+      `The second argument must be an options object or a string/boolean separator, but ${typeof options} given`
+    )
+  }
 
-  let regexpPattern = compile(pattern, separator)
+  options = options || { separator: true }
+
+  let regexpPattern = compile(pattern, options)
   let regexp = new RegExp(`^${regexpPattern}$`)
 
   let fn = isMatch.bind(null, regexp) as isMatch
+  fn.options = options
   fn.pattern = pattern
   fn.regexp = regexp
-  fn.separator = separator
   return fn
 }
 
