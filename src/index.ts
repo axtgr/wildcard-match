@@ -1,5 +1,6 @@
 interface WildcardMatchOptions {
   separator?: string | boolean
+  flags?: string
 }
 
 function escapeRegExpChar(char: string) {
@@ -200,7 +201,7 @@ function wildcardMatch(
   }
 
   let regexpPattern = compile(pattern, options)
-  let regexp = new RegExp(`^${regexpPattern}$`)
+  let regexp = new RegExp(`^${regexpPattern}$`, options.flags)
 
   let fn = isMatch.bind(null, regexp) as isMatch
   fn.options = options

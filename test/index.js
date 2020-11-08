@@ -7,6 +7,11 @@ module.exports = function (t) {
     t.ok(wcmatch('pattern').regexp instanceof RegExp)
   })
 
+  t.test('Passes the given flags to the regexp', (t) => {
+    let isMatch = wcmatch('pattern', { flags: 'ig' })
+    t.equal(isMatch.regexp.flags, 'gi')
+  })
+
   t.test('No wildcards', (t) => {
     t.test('No separator given', (t) => {
       t.ok(wcmatch('')(''))
