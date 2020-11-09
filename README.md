@@ -48,7 +48,7 @@ More details are available in the [Installation](#installation), [Usage](#usage)
 <table>
   <tr>
     <td align="center">🍃</td>
-    <td><strong>Lightweight</strong><br>No dependencies. Just <strong>750</strong> bytes when minified and gzipped</td>
+    <td><strong>Lightweight</strong><br>No dependencies. Just <strong>900</strong> bytes when minified and gzipped</td>
   </tr>
   <tr>
     <td align="center">🏎</td>
@@ -262,9 +262,10 @@ The options object that was used to compile the regular expression and create th
 
 ### Options
 
-| Option      | Type              | Default Value | Description                                                                                                                                                                                          |
-| ----------- | ----------------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `separator` | boolean \| string | true          | Defines the separator used to split patterns and samples into segments<ul><li>`true` — `/` in patterns match both `/` and `\` in samples<li>`false` — don't split<li>_any string_ — custom separator |
+| Option      | Type                        | Default Value | Description                                                                                                                                                                                                                       |
+| ----------- | --------------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `separator` | string&nbsp;\|&nbsp;boolean | true          | Separator to be used to split patterns and samples into segments<ul><li>`true` — `/` in patterns match both `/` and `\` in samples<li>`false` — don't split<li>_any string_ — custom separator                                    |
+| `flags`     | string                      | undefined     | [Flags](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#Advanced_searching_with_flags) to pass to the RegExp. For example, setting this option to `'i'` will make the matching case-insensitive |
 
 ## Comparison
 
