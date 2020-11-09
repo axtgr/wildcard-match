@@ -30,7 +30,7 @@
     "bench": "node bench/bench",
     "lint": "eslint {src,test,bench}/*",
     "format": "eslint --cache --fix {src,test,bench}/* && prettier --write **/*.md",
-    "test": "ts-node -T -r \"core-js/modules/es.symbol.async-iterator\" -I \" \" node_modules/pta/src/cli.js --no-esm test/[!_]*.js"
+    "test": "ts-node -T -r \"core-js/modules/es.symbol.async-iterator\" -I \" \" node_modules/pta/src/cli.js test/[!_]*.js"
   },
   "husky": {
     "hooks": {

@@ -1,4 +1,5 @@
-// eslint-disable-next-line prefer-destructuring
+/* eslint-disable prefer-destructuring, no-var */
+
 var Suite = require('benchmark').Suite
 var globrex = require('globrex')
 var picomatch = require('picomatch')

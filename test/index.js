@@ -1,6 +1,6 @@
-let wcmatch = require('../build')
+import wcmatch from '../build'
 
-module.exports = function (t) {
+export default function (t) {
   t.test('Basic', (t) => {
     t.equal(wcmatch('pattern').pattern, 'pattern')
     t.equal(wcmatch('pattern').options, {})

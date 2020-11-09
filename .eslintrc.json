@@ -19,9 +19,10 @@
   ],
   "rules": {
     "prettier/prettier": "error",
+    "no-var": "error",
     "prefer-const": "off",
     "prefer-template": "error",
-    "prefer-destructuring": "off",
+    "prefer-destructuring": "error",
     "prefer-arrow-callback": "error",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/ban-ts-comment": "off",
