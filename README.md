@@ -3,7 +3,7 @@
 <h1 align="center">wildcard-match</h1>
 
 <p align="center">
-  <strong>A tiny but extremely fast JavaScript library for matching basic glob patterns</strong>
+  <strong>A tiny and extremely fast JavaScript library for compiling and matching basic glob patterns</strong>
 </p>
 
 <p align="center">
@@ -48,7 +48,7 @@ More details are available in the [Installation](#installation), [Usage](#usage)
 <table>
   <tr>
     <td align="center">🍃</td>
-    <td><strong>Lightweight</strong><br>No dependencies. Just <strong>900</strong> bytes when minified and gzipped</td>
+    <td><strong>Lightweight</strong><br>No dependencies. Just <strong>873</strong> bytes when minified and gzipped</td>
   </tr>
   <tr>
     <td align="center">🏎</td>
@@ -56,7 +56,7 @@ More details are available in the [Installation](#installation), [Usage](#usage)
   </tr>
   <tr>
     <td align="center">🌞</td>
-    <td><strong>Simple</strong><br>The API is a single function. The number of available options is <strong>1</strong></td>
+    <td><strong>Simple</strong><br>The API is a single function</td>
   </tr>
   <tr>
     <td align="center">⚒</td>
