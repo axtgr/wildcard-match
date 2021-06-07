@@ -3,6 +3,10 @@ interface WildcardMatchOptions {
   flags?: string
 }
 
+/**
+ * Escapes a character if it has a special meaning in regular expressions
+ * and returns the character as is if it doesn't
+ */
 function escapeRegExpChar(char: string) {
   if (
     char === '-' ||
@@ -27,6 +31,9 @@ function escapeRegExpChar(char: string) {
   }
 }
 
+/**
+ * Escapes all characters in a given string that have a special meaning in regular expressions
+ */
 function escapeRegExpString(str: string) {
   let result = ''
   for (let i = 0; i < str.length; i++) {
@@ -35,6 +42,9 @@ function escapeRegExpString(str: string) {
   return result
 }
 
+/**
+ * Transforms one or more glob patterns into a RegExp pattern
+ */
 function compile(pattern: string | string[], options: WildcardMatchOptions): string {
   if (Array.isArray(pattern)) {
     let regExpPatterns = pattern.map((p) => `^${compile(p, options)}$`)
@@ -47,7 +57,11 @@ function compile(pattern: string | string[], options: WildcardMatchOptions): str
   let wildcard = '.'
 
   if (separator === true) {
-    // In this case forward slashes in patterns match both forward and backslashes in samples
+    // In this case forward slashes in patterns match both forward and backslashes in samples:
+    //
+    // `foo/bar` will match `foo/bar`
+    //           will match `foo\bar`
+    //
     separatorSplitter = '/'
     separatorMatcher = '[/\\\\]'
     wildcard = '[^/\\\\]'
@@ -63,10 +77,18 @@ function compile(pattern: string | string[], options: WildcardMatchOptions): str
     }
   }
 
-  // When a separator is explicitly specified in a pattern, it must match _one or more_
-  // separators in a sample, so we use quantifiers. When a pattern doesn't have a trailing
-  // separator, a sample can still optionally have them, so we use different quantifiers
-  // depending on the index of a segment.
+  // When a separator is explicitly specified in a pattern,
+  // it MUST match ONE OR MORE separators in a sample:
+  //
+  // `foo/bar/` will match  `foo//bar///`
+  //            won't match `foo/bar`
+  //
+  // When a pattern doesn't have a trailing separator,
+  // a sample can still optionally have them:
+  //
+  // `foo/bar` will match `foo/bar//`
+  //
+  // So we use different quantifiers depending on the index of a segment.
   let requiredSeparator = separator ? `${separatorMatcher}+?` : ''
   let optionalSeparator = separator ? `${separatorMatcher}*?` : ''
 
@@ -131,15 +153,18 @@ interface isMatch {
    * isMatch('foo') //=> true
    * ```
    */
+
+  // This overrides the function's signature because for the end user
+  // it is always bound to a RegExp
   (sample: string): boolean
 
-  /** The compiled regular expression */
+  /** Compiled regular expression */
   regexp: RegExp
 
-  /** The original pattern or array of patterns that was used to compile the RegExp */
+  /** Original pattern or array of patterns that was used to compile the RegExp */
   pattern: string | string[]
 
-  /** The options that were used to compile the RegExp */
+  /** Options that were used to compile the RegExp */
   options: WildcardMatchOptions
 }
 
