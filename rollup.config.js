@@ -5,7 +5,6 @@ import { terser } from 'rollup-plugin-terser'
 import typescript from '@wessberg/rollup-plugin-ts'
 import cleanup from 'rollup-plugin-cleanup'
 import transformDefaultExport from 'ts-transform-default-export'
-import transformMacros from 'typescript-transform-macros'
 
 const INPUT_FILE = 'src/index.ts'
 const OUT_DIR = 'build'
@@ -62,7 +61,6 @@ export default {
           },
           transformers: ({ program }) => {
             return {
-              before: transformMacros(program),
               afterDeclarations:
                 currentFormat === 'es' ? undefined : transformDefaultExport(program),
             }
