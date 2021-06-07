@@ -1,6 +1,6 @@
 {
   "name": "wildcard-match",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "description": "A tiny and extremely fast library for compiling and matching basic glob patterns",
   "author": "Alex Schneider <me@schneider.ax>",
   "license": "ISC",
