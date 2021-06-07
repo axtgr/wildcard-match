@@ -61,8 +61,6 @@ function compile(pattern: string | string[], options: WildcardMatchOptions): str
     } else {
       wildcard = `[^${separatorMatcher}]`
     }
-  } else {
-    wildcard = '.'
   }
 
   // When a separator is explicitly specified in a pattern, it must match _one or more_
