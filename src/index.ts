@@ -45,9 +45,9 @@ function escapeRegExpString(str: string) {
 /**
  * Transforms one or more glob patterns into a RegExp pattern
  */
-function compile(pattern: string | string[], options: WildcardMatchOptions): string {
+function transform(pattern: string | string[], options: WildcardMatchOptions): string {
   if (Array.isArray(pattern)) {
-    let regExpPatterns = pattern.map((p) => `^${compile(p, options)}$`)
+    let regExpPatterns = pattern.map((p) => `^${transform(p, options)}$`)
     return `(?:${regExpPatterns.join('|')})`
   }
 
@@ -223,7 +223,7 @@ function wildcardMatch(
     throw new Error('\\ is not a valid separator')
   }
 
-  let regexpPattern = compile(pattern, options)
+  let regexpPattern = transform(pattern, options)
   let regexp = new RegExp(`^${regexpPattern}$`, options.flags)
 
   let fn = isMatch.bind(null, regexp) as isMatch
