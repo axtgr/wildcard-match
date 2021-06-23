@@ -9,6 +9,8 @@
 <p align="center">
   <a href="https://www.npmjs.com/package/wildcard-match"><img src="https://img.shields.io/npm/v/wildcard-match" alt="npm package"></a>
   &nbsp;
+  <a href="https://bundlephobia.com/package/wildcard-match"><img src="https://img.shields.io/bundlephobia/minzip/wildcard-match?color=%23b4a&label=size" alt="size"></a>
+  &nbsp;
   <a href="https://github.com/axtgr/wildcard-match/actions"><img src="https://img.shields.io/github/workflow/status/axtgr/wildcard-match/CI?label=CI&logo=github" alt="CI"></a>
   &nbsp;
   <a href="https://www.buymeacoffee.com/axtgr"><img src="https://img.shields.io/badge/%F0%9F%8D%BA-Buy%20me%20a%20beer-red?style=flat" alt="Buy me a beer"></a>
@@ -48,7 +50,7 @@ More details are available in the [Installation](#installation), [Usage](#usage)
 <table>
   <tr>
     <td align="center">🍃</td>
-    <td><strong>Lightweight</strong><br>No dependencies. Just <strong>873</strong> bytes when minified and gzipped</td>
+    <td><strong>Lightweight</strong><br>No dependencies. <em>Less than 1 KB</em> when minified and gzipped</td>
   </tr>
   <tr>
     <td align="center">🏎</td>
@@ -64,7 +66,7 @@ More details are available in the [Installation](#installation), [Usage](#usage)
   </tr>
   <tr>
     <td align="center">🔌</td>
-    <td><strong>Compatible</strong><br>Works in any ES5 environment including older versions of Node.js, Deno, React Native and browsers</td>
+    <td><strong>Compatible</strong><br>Works in any ES5+ environment including older versions of Node.js, Deno, React Native and browsers</td>
   </tr>
 </table>
 
@@ -101,6 +103,8 @@ When included from a CDN, wildcard-match is available as the global function `wc
 
 ## Usage
 
+### Basics
+
 Wildcard-match comes built in ESM, CommonJS and UMD formats and includes TypeScript typings. The examples use ESM imports, which can be replaced with the following line for CommonJS: `const wcmatch = require('wildcard-match')`.
 
 The default export is a function of two arguments, first of which can be either a single glob string or an array of such patterns. The second argument is optional and can be either an [options](#options) object or a separator (which will be the value of the `separator` option). Wildcard-match compiles them into a regular expression and returns a function (usually called `isMatch` in the examples) that tests strings against the pattern. The pattern, options and the compiled RegExp object are available as properties on the returned function:
@@ -108,15 +112,15 @@ The default export is a function of two arguments, first of which can be either 
 ```js
 import wcmatch from 'wildcard-match'
 
-const isMatch = wcmatch('src/?ar', '@')
+const isMatch = wcmatch('src/?ar')
 
 isMatch('src/bar') //=> true
 isMatch('src/car') //=> true
 isMatch('src/cvar') //=> false
 
 isMatch.pattern //=> 'src/?ar'
-isMatch.options //=> { separator: '@' }
-isMatch.regexp //=> /^src\/+?[^/]ar\/*?$/
+isMatch.options //=> {}
+isMatch.regexp //=> /^src[/\\]+?[^/\\]ar[/\\]*?$/
 ```
 
 The returned function can be invoked immediately if there is no need to match a pattern more than once:
@@ -138,16 +142,17 @@ Wildcard-match supports the following glob syntax in patterns:
 
 More features are available in the [outmatch](https://github.com/axtgr/outmatch) library.
 
-### File Paths and Separators
+### Separators
 
-Globs are most often used to search file paths, which are, essentially, strings split into segments by slashes. While other libraries are usually restricted to this use-case, wildcard-match is able to work with _arbitrary_ strings by accepting a custom separator as the second parameter:
+Globs are most often used to search file paths, which are, essentially, strings split into segments by slashes. While other libraries are usually restricted to this use-case, wildcard-match is able to work with _arbitrary_ strings by accepting a custom separator in the second parameter:
 
 ```js
 const matchDomain = wcmatch('*.example.com', { separator: '.' })
 matchDomain('subdomain.example.com') //=> true
 
-const matchLike = wcmatch('wh?t like**like mean', { separator: 'like' })
-matchLike('what like do like you like mean') //=> true
+// Here, the second parameter is a shorthand for `{ separator: ',' }`
+const matchLike = wcmatch('one,**,f?ur', ',')
+matchLike('one,two,three,four') //=> true
 ```
 
 The only limitation is that backslashes `\` cannot be used as separators in patterns because
@@ -169,7 +174,7 @@ isMatchC('foo/bar') //=> true
 isMatchC('foo\\bar') //=> false
 ```
 
-Matching features work with a _segment_ rather than a whole pattern:
+The matching features work with a _segment_ rather than a whole pattern:
 
 ```js
 const isMatch = wcmatch('foo/b*')
@@ -185,7 +190,7 @@ const isMatch = wcmatch('foo?ba*', false)
 isMatch('foo/bar/qux') //=> true
 ```
 
-A single separator in a pattern will match any number of separators in a sample string:
+A single separator in a pattern will match _one or more_ separators in a sample string:
 
 ```js
 wcmatch('foo/bar/baz')('foo/bar///baz') //=> true
