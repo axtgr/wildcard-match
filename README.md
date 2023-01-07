@@ -11,7 +11,7 @@
   &nbsp;
   <a href="https://bundlephobia.com/package/wildcard-match"><img src="https://img.shields.io/bundlephobia/minzip/wildcard-match?color=%23b4a&label=size" alt="size"></a>
   &nbsp;
-  <a href="https://github.com/axtgr/wildcard-match/actions"><img src="https://img.shields.io/github/workflow/status/axtgr/wildcard-match/CI?label=CI&logo=github" alt="CI"></a>
+  <a href="https://github.com/axtgr/wildcard-match/actions"><img src="https://img.shields.io/github/actions/workflow/status/axtgr/wildcard-match/ci.yml?label=CI&logo=github" alt="CI"></a>
   &nbsp;
   <a href="https://www.buymeacoffee.com/axtgr"><img src="https://img.shields.io/badge/%F0%9F%8D%BA-Buy%20me%20a%20beer-red?style=flat" alt="Buy me a beer"></a>
 </p>
