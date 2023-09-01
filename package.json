@@ -17,10 +17,10 @@
   "main": "build/index.js",
   "module": "build/index.es.mjs",
   "unpkg": "build/index.umd.js",
-  "types": "build/index.d.ts",
   "exports": {
     "import": "./build/index.es.mjs",
-    "require": "./build/index.js"
+    "require": "./build/index.js",
+    "types": "./build/index.d.ts"
   },
   "files": [
     "build"
