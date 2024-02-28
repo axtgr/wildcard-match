@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: [14]
+        node: [20]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Wait for the CI workflow to complete
