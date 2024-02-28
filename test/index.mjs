@@ -1,4 +1,4 @@
-import wcmatch from '../build'
+import wcmatch from '../build/index.es.mjs'
 
 export default function (t) {
   t.test('Basic', (t) => {
