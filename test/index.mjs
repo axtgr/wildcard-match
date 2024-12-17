@@ -264,6 +264,7 @@ export default function (t) {
       t.notOk(wcmatch('one/**', '/')('//'))
       t.notOk(wcmatch('one/**', '/')('two'))
       t.notOk(wcmatch('one/**', '/')('/one'))
+      t.notOk(wcmatch('one/**', '/')('onetwo/three.js'))
       t.notOk(wcmatch('**/one', '/')(''))
       t.notOk(wcmatch('**/one', '/')('/'))
       t.notOk(wcmatch('**/one', '/')('//'))

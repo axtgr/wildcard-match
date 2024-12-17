@@ -113,7 +113,12 @@ function transform(
 
     if (separator && segment === '**') {
       if (currentSeparator) {
-        result += s === 0 ? '' : currentSeparator
+        result +=
+          s === 0
+            ? ''
+            : s === segments.length - 1
+            ? `(?:${requiredSeparator}|$)`
+            : requiredSeparator
         result += `(?:${wildcard}*?${currentSeparator})*?`
       }
       continue
