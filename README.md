@@ -66,7 +66,7 @@ More details are available in the [Installation](#installation), [Usage](#usage)
   </tr>
   <tr>
     <td align="center">🔌</td>
-    <td><strong>Compatible</strong><br>Works in any ES5+ environment including older versions of Node.js, Deno, React Native and browsers</td>
+    <td><strong>Compatible</strong><br>Works in any ES5+ environment including older versions of Node.js, Bun, Deno, React Native and browsers</td>
   </tr>
 </table>
 
@@ -275,16 +275,15 @@ The options object that was used to compile the regular expression and create th
 ## Comparison
 
 ```
+Node.js v22
 Pattern: src/test/**/*.?s
 Sample: src/test/foo/bar.js
 
 Compilation
-  wildcard-match     1,046,326 ops/sec
-  picomatch            261,589 ops/sec
+  wildcard-match v5.1.4      1,000,947 ops/sec
+  picomatch v4.0.2             216,903 ops/sec
 
 Matching
-  wildcard-match     34,646,993 ops/sec
-  picomatch          10,750,888 ops/sec
+  wildcard-match v5.1.4     24,330,069 ops/sec
+  picomatch v4.0.2           7,776,730 ops/sec
 ```
-
-A better comparison is in the works.
