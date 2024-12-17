@@ -30,7 +30,7 @@ jobs:
       - name: Build
         run: npm run build
       - name: Upload the build
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: build
           path: build
@@ -44,15 +44,15 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Install Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
       - name: Install the dependencies using the package manager whose lock file is in the root dir
         uses: jaid/action-npm-install@v1.2.1
       - name: Download the build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v4
         with:
           name: build
           path: build

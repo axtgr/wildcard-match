@@ -23,13 +23,13 @@ jobs:
         if: steps.wait-for-ci.outputs.conclusion == 'failure'
         run: exit 1
       - name: Check out the repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Install Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
       - name: Download the build
-        uses: dawidd6/action-download-artifact@v6
+        uses: dawidd6/action-download-artifact@v7
         with:
           workflow: ci.yml
           name: build
