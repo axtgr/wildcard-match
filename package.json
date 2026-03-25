@@ -50,7 +50,7 @@
     "globrex": "^0.1.2",
     "husky": "^4.3.8",
     "matcher": "^4.0.0",
-    "picomatch": "^4.0.2",
+    "picomatch": "^4.0.4",
     "prettier": "^2.8.8",
     "pta": "^0.2.3",
     "rollup": "^2.79.2",
