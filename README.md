@@ -9,7 +9,7 @@
 <p align="center">
   <a href="https://www.npmjs.com/package/wildcard-match"><img src="https://img.shields.io/npm/v/wildcard-match" alt="npm package"></a>
   &nbsp;
-  <a href="https://bundlephobia.com/package/wildcard-match"><img src="https://img.shields.io/bundlephobia/minzip/wildcard-match?color=%23b4a&label=size" alt="size"></a>
+  <a href="https://bundlejs.com/?q=wildcard-match"><img src="https://img.shields.io/bundlejs/size/wildcard-match?label=size%20(minzip)&color=%2333aadd" alt="size"></a>
   &nbsp;
   <a href="https://github.com/axtgr/wildcard-match/actions"><img src="https://img.shields.io/github/actions/workflow/status/axtgr/wildcard-match/ci.yml?label=CI&logo=github" alt="CI"></a>
   &nbsp;
@@ -274,16 +274,34 @@ The options object that was used to compile the regular expression and create th
 
 ## Comparison
 
-```
-Node.js v22
+Notes:
+
+- _minimatch_ is the most popular library of the bunch;
+- _matcher_ doesn't let the user precompile patterns;
+- _globrex_ has long-standing unfixed bugs.
+
+<pre>
+Node.js v24
 Pattern: src/test/**/*.?s
 Sample: src/test/foo/bar.js
 
 Compilation
-  wildcard-match v5.1.4      1,000,947 ops/sec
-  picomatch v4.0.2             216,903 ops/sec
+  globrex                        2,719,333 ops/sec
+  globrex separated                787,361 ops/sec
+  micromatch                       424,504 ops/sec
+  minimatch                        222,143 ops/sec
+  picomatch                        414,078 ops/sec
+  picomatch separated              388,848 ops/sec
+  <strong>wildcard-match</strong>                 <strong>3,161,454 ops/sec</strong>
+  <strong>wildcard-match separated</strong>       <strong>1,839,525 ops/sec</strong>
 
 Matching
-  wildcard-match v5.1.4     24,330,069 ops/sec
-  picomatch v4.0.2           7,776,730 ops/sec
-```
+  matcher                        4,465,481 ops/sec
+  globrex                       52,199,575 ops/sec
+  globrex separated             45,643,062 ops/sec
+  micromatch                    19,429,326 ops/sec
+  minimatch                      2,953,808 ops/sec
+  picomatch separated           19,667,487 ops/sec
+  <strong>wildcard-match</strong>                <strong>75,388,261 ops/sec</strong>
+  <strong>wildcard-match separated</strong>      <strong>56,864,244 ops/sec</strong>
+</pre>
