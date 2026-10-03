@@ -29,7 +29,7 @@
   ],
   "scripts": {
     "build": "rollup -c",
-    "bench": "node bench/bench",
+    "bench": "node bench/bench.mjs",
     "lint": "eslint {src,test,bench}/*",
     "format": "eslint --cache --fix {src,test,bench}/* && prettier --write **/*.md",
     "test": "ts-node -T -r \"core-js/modules/es.symbol.async-iterator\" -I \" \" node_modules/pta/src/cli.js test/[!_]*.mjs"
@@ -49,8 +49,8 @@
     "eslint-plugin-prettier": "^3.4.1",
     "globrex": "^0.1.2",
     "husky": "^4.3.8",
-    "matcher": "^4.0.0",
-    "picomatch": "^4.0.2",
+    "matcher": "^7.0.0",
+    "picomatch": "^4.0.7",
     "prettier": "^2.8.8",
     "pta": "^0.2.3",
     "rollup": "^2.79.2",

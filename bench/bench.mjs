@@ -1,10 +1,10 @@
-/* eslint-disable prefer-destructuring, no-var */
+import benchmark from 'benchmark'
+import globrex from 'globrex'
+import picomatch from 'picomatch'
+import { isMatch } from 'matcher'
+import wcmatch from '../build/index.js'
 
-var Suite = require('benchmark').Suite
-var globrex = require('globrex')
-var picomatch = require('picomatch')
-var matcher = require('matcher')
-var wcmatch = require('../build')
+const { Suite } = benchmark
 
 function formatNumber(number) {
   return String(number.toFixed(0))
@@ -20,26 +20,25 @@ function formatNumber(number) {
 }
 
 function handleStart(event) {
-  var longestName = ''
-  for (var i = 0; i < event.currentTarget.length; i++) {
+  let longestName = ''
+  for (let i = 0; i < event.currentTarget.length; i++) {
     if (event.currentTarget[i].name.length > longestName.length) {
       longestName = event.currentTarget[i].name
     }
   }
   event.currentTarget.longestName = longestName
-  // eslint-disable-next-line prefer-template
-  console.log('\n' + event.currentTarget.name)
+  console.log(`\n${event.currentTarget.name}`)
 }
 
 function handleCycle(event) {
-  var name = event.target.name.padEnd(event.currentTarget.longestName.length + 2)
-  var hz = formatNumber(event.target.hz)
+  const name = event.target.name.padEnd(event.currentTarget.longestName.length + 2)
+  const hz = formatNumber(event.target.hz)
   console.log(' ', name, hz, 'ops/sec')
 }
 
 function pattern() {
   // Make sure the engine doesn't optimize for static strings
-  var str = 'src'
+  const str = 'src'
   return `${str || 'asd'}/test/**/*.?s`
 }
 
@@ -47,7 +46,7 @@ function sample() {
   return 'src/test/foo/bar.js'
 }
 
-var OPTIONS = {
+const OPTIONS = {
   wcmatch: false,
   wcmatchSep: true,
   globrex: { globstar: false, filepath: false, extended: true, strict: false },
@@ -62,7 +61,7 @@ var OPTIONS = {
     noglobstar: false,
   },
 }
-var MATCHERS = {
+const MATCHERS = {
   wcmatch: wcmatch(pattern(), OPTIONS.wcmatch),
   wcmatchSep: wcmatch(pattern(), OPTIONS.wcmatchSep),
   globrex: globrex(pattern(), OPTIONS.globrex).regex,
@@ -76,14 +75,14 @@ function compile(fn, options) {
   }
 }
 
-function match(matcher) {
-  if (matcher instanceof RegExp) {
+function match(fn) {
+  if (fn instanceof RegExp) {
     return function () {
-      return matcher.test(sample())
+      return fn.test(sample())
     }
   } else {
     return function () {
-      return matcher(sample())
+      return fn(sample())
     }
   }
 }
@@ -100,7 +99,10 @@ new Suite('Compilation')
   .run()
 
 new Suite('Matching')
-  .add('matcher', match(matcher.isMatch.bind(null, pattern())))
+  .add(
+    'matcher',
+    match((input) => isMatch(input, pattern()))
+  )
   .add('globrex', match(MATCHERS.globrex))
   .add('globrex separated', match(MATCHERS.globrexSep))
   .add('picomatch separated', match(MATCHERS.picomatchSep))
@@ -109,19 +111,3 @@ new Suite('Matching')
   .on('start', handleStart)
   .on('cycle', handleCycle)
   .run()
-
-// Compilation
-//   globrex                        1,191,913 ops/sec
-//   globrex separated                394,334 ops/sec
-//   picomatch                        484,361 ops/sec
-//   picomatch separated              261,589 ops/sec
-//   wildcard-match                 1,927,998 ops/sec
-//   wildcard-match separated       1,046,326 ops/sec
-
-// Matching
-//   matcher                        1,740,904 ops/sec
-//   globrex                       30,113,974 ops/sec
-//   globrex separated             25,312,519 ops/sec
-//   picomatch separated           10,750,888 ops/sec
-//   wildcard-match                45,763,771 ops/sec
-//   wildcard-match separated      34,646,993 ops/sec
