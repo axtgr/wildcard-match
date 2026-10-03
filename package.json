@@ -4,7 +4,10 @@
   "description": "A tiny and extremely fast library for compiling and matching basic glob patterns",
   "author": "Alex Schneider <me@schneider.ax>",
   "license": "ISC",
-  "repository": "https://github.com/axtgr/wildcard-match",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/axtgr/wildcard-match.git"
+  },
   "keywords": [
     "glob",
     "pattern",
