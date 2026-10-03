@@ -50,6 +50,8 @@
     "globrex": "^0.1.2",
     "husky": "^4.3.8",
     "matcher": "^7.0.0",
+    "micromatch": "^4.0.8",
+    "minimatch": "^10.2.6",
     "picomatch": "^4.0.7",
     "prettier": "^2.8.8",
     "pta": "^0.2.3",

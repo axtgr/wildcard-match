@@ -1,5 +1,7 @@
 import benchmark from 'benchmark'
 import globrex from 'globrex'
+import micromatch from 'micromatch'
+import { Minimatch, makeRe } from 'minimatch'
 import picomatch from 'picomatch'
 import { isMatch } from 'matcher'
 import wcmatch from '../build/index.js'
@@ -51,6 +53,8 @@ const OPTIONS = {
   wcmatchSep: true,
   globrex: { globstar: false, filepath: false, extended: true, strict: false },
   globrexSep: { globstar: true, filepath: true, extended: true, strict: false },
+  micromatch: {},
+  minimatch: {},
   picomatchSep: {
     nobrace: false,
     nounique: true,
@@ -66,6 +70,8 @@ const MATCHERS = {
   wcmatchSep: wcmatch(pattern(), OPTIONS.wcmatchSep),
   globrex: globrex(pattern(), OPTIONS.globrex).regex,
   globrexSep: globrex(pattern(), OPTIONS.globrexSep).regex,
+  micromatch: micromatch.matcher(pattern(), OPTIONS.micromatch),
+  minimatch: new Minimatch(pattern(), OPTIONS.minimatch),
   picomatchSep: picomatch(pattern(), OPTIONS.picomatchSep),
 }
 
@@ -90,6 +96,8 @@ function match(fn) {
 new Suite('Compilation')
   .add('globrex', compile(globrex, OPTIONS.globrex))
   .add('globrex separated', compile(globrex, OPTIONS.globrexSep))
+  .add('micromatch', compile(micromatch.makeRe, OPTIONS.micromatch))
+  .add('minimatch', compile(makeRe, OPTIONS.minimatch))
   .add('picomatch', compile(picomatch))
   .add('picomatch separated', compile(picomatch, OPTIONS.picomatchSep))
   .add('wildcard-match', compile(wcmatch, OPTIONS.wcmatch))
@@ -102,6 +110,11 @@ new Suite('Matching')
   .add(
     'matcher',
     match((input) => isMatch(input, pattern()))
+  )
+  .add('micromatch', match(MATCHERS.micromatch))
+  .add(
+    'minimatch',
+    match((input) => MATCHERS.minimatch.match(input))
   )
   .add('globrex', match(MATCHERS.globrex))
   .add('globrex separated', match(MATCHERS.globrexSep))
