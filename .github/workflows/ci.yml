@@ -3,11 +3,11 @@ name: CI
 on:
   workflow_dispatch:
   push:
-    branches: master
-    paths-ignore: 'bench/**'
+    branches: [master]
+    paths-ignore: ['bench/**']
   pull_request:
-    branches: master
-    paths-ignore: 'bench/**'
+    branches: [master]
+    paths-ignore: ['bench/**']
 
 jobs:
   build:
