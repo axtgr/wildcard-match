@@ -281,6 +281,32 @@ Notes:
 - _globrex_ has long-standing unfixed bugs.
 
 <pre>
+Bun v1.4.2
+Pattern: src/test/**/*.?s
+Sample: src/test/foo/bar.js
+
+Compilation
+  globrex                        2,279,295 ops/sec
+  globrex separated                757,007 ops/sec
+  micromatch                       831,972 ops/sec
+  minimatch                        308,634 ops/sec
+  picomatch                        831,356 ops/sec
+  picomatch separated              747,646 ops/sec
+  <strong>wildcard-match</strong>                 <strong>3,168,648 ops/sec</strong>
+  <strong>wildcard-match separated</strong>       <strong>2,565,991 ops/sec</strong>
+
+Matching
+  matcher                        5,118,398 ops/sec
+  micromatch                    27,628,707 ops/sec
+  minimatch                      5,992,993 ops/sec
+  globrex                       59,282,763 ops/sec
+  globrex separated             41,883,775 ops/sec
+  picomatch separated           24,100,844 ops/sec
+  <strong>wildcard-match</strong>               <strong>548,109,205 ops/sec</strong>
+  <strong>wildcard-match separated</strong>     <strong>498,601,762 ops/sec</strong>
+</pre>
+
+<pre>
 Node.js v24
 Pattern: src/test/**/*.?s
 Sample: src/test/foo/bar.js
